@@ -1,4 +1,5 @@
 import { Router, Request, Response } from "express";
+import { videosRepository } from "../repositories/videos-repository";
 
 const videos = [
   { id: 1, title: "About JS - 01", author: "it-incubator.eu" },
@@ -11,14 +12,13 @@ const videos = [
 export const videosRouter = Router({});
 
 videosRouter.get("/", (req: Request, res: Response) => {
+  const videos = videosRepository.findVideos();
   res.status(200).send(videos);
 });
 
 videosRouter.get("/:videoId", (req: Request, res: Response) => {
   const id = +req.params.videoId;
-  const video = videos.find(
-    (item: { id: number; title: string; author: string }) => item.id === id
-  );
+  const video = videosRepository.getVideoById(id);
 
   if (video) {
     res.status(200).send(video);
@@ -29,11 +29,6 @@ videosRouter.get("/:videoId", (req: Request, res: Response) => {
 
 videosRouter.post("/", (req: Request, res: Response) => {
   const title = req.body.title;
-  const newVideo = {
-    id: +new Date(),
-    title,
-    author: "it-incubator.eu",
-  };
 
   if (typeof title === "undefined") {
     res.status(400).send({
@@ -63,30 +58,26 @@ videosRouter.post("/", (req: Request, res: Response) => {
       ],
     });
   } else {
-    videos.push(newVideo);
+    const newVideo = videosRepository.createVideo(title);
     res.send(newVideo);
   }
 });
 
 videosRouter.delete("/:id", (req: Request, res: Response) => {
-  for (let i = 0; i < videos.length; i++) {
-    if (videos[i].id === +req.params.id) {
-      videos.splice(i, 1);
-      res.send(204);
-      return;
-    }
+  const isVideoDeleted = videosRepository.deleteVideo(+req.params.id);
+  if (isVideoDeleted) {
+    res.send(204);
+  } else {
+    res.send(404);
   }
-  res.send(404);
 });
 
 videosRouter.put("/:id", (req: Request, res: Response) => {
-  const video = videos.find(
-    (item: { id: number; title: string; author: string }) =>
-      item.id === +req.params.id
-  );
+  const id = +req.params.id;
+  const isVideoUpdated = videosRepository.updateVideo(id);
   const title = req.body.title;
 
-  if (video) {
+  if (isVideoUpdated) {
     if (typeof title === "undefined") {
       res.status(400).send({
         errorsMessages: [
@@ -115,8 +106,11 @@ videosRouter.put("/:id", (req: Request, res: Response) => {
         ],
       });
     } else {
-      video.title = title;
-      res.status(204).send(video);
+      const video = videosRepository.getVideoById(id);
+      if (video) {
+        video.title = title;
+        res.status(204).send(video);
+      }
     }
   } else {
     res.status(404);
