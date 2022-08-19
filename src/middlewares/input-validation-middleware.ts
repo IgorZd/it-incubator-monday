@@ -1,0 +1,16 @@
+import { NextFunction, Request, Response } from "express";
+import { validationResult } from "express-validator";
+
+export const inputValidationMiddleware = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    const errorsArr = errors
+      .array()
+      .map((item: any) => ({ message: item.msg, field: item.param }));
+    res.status(400).json({ errors: errorsArr });
+  } else next();
+};
