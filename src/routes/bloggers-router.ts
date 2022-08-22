@@ -2,6 +2,7 @@ import { Router, Request, Response } from "express";
 import { body } from "express-validator";
 import { inputValidationMiddleware } from "../middlewares/input-validation-middleware";
 import { bloggersRepository } from "../repositories/bloggers-repository";
+import { isIdExist } from "../repositories/videos-repository";
 
 export const bloggersRouter = Router({});
 
@@ -20,8 +21,8 @@ const youtubeUrlValidation = body("youtubeUrl")
   );
 
 bloggersRouter.get("/", (req: Request, res: Response) => {
-  const videos = bloggersRepository.findBloggers();
-  res.status(200).send(videos);
+  const bloggers = bloggersRepository.findBloggers();
+  res.status(200).send(bloggers);
 });
 
 bloggersRouter.post(
@@ -32,16 +33,19 @@ bloggersRouter.post(
   (req: Request, res: Response) => {
     const name = req.body.name;
     const youtubeUrl = req.body.youtubeUrl;
-    const newVideo = bloggersRepository.createBlogger(name, youtubeUrl);
-    res.send(newVideo);
+    const newBlogger = bloggersRepository.createBlogger(name, youtubeUrl);
+    res.status(201).send(newBlogger);
   }
 );
 
 bloggersRouter.get("/:id", (req: Request, res: Response) => {
   const id = +req.params.id;
+  const bloggers = bloggersRepository.findBloggers();
   const blogger = bloggersRepository.getBloggerById(id);
 
-  if (blogger) {
+  if (!isIdExist(id, bloggers)) {
+    res.send(404);
+  } else if (blogger) {
     res.status(200).send(blogger);
   } else {
     res.send(404);
@@ -56,10 +60,13 @@ bloggersRouter.put(
   (req: Request, res: Response) => {
     const id = +req.params.id;
     const isBloggerUpdated = bloggersRepository.updateBlogger(id);
+    const bloggers = bloggersRepository.findBloggers();
     const name = req.body.name;
     const youtubeUrl = req.body.youtubeUrl;
 
-    if (isBloggerUpdated) {
+    if (!isIdExist(id, bloggers)) {
+      res.send(404);
+    } else if (isBloggerUpdated) {
       const blogger = bloggersRepository.getBloggerById(id);
       if (blogger) {
         blogger.name = name;
@@ -73,7 +80,8 @@ bloggersRouter.put(
 );
 
 bloggersRouter.delete("/:id", (req: Request, res: Response) => {
-  const isVideoDeleted = bloggersRepository.deleteBlogger(+req.params.id);
+  const id = +req.params.id;
+  const isVideoDeleted = bloggersRepository.deleteBlogger(id);
   if (isVideoDeleted) {
     res.send(204);
   } else {
