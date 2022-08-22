@@ -15,9 +15,7 @@ const youtubeUrlValidation = body("youtubeUrl")
   .matches(
     /^https:\/\/([a-zA-Z0-9_-]+\.)+[a-zA-Z0-9_-]+(\/[a-zA-Z0-9_-]+)*\/?$/
   )
-  .withMessage(
-    "youtubeUrl should consist from 1 to 100 symbols and has correct structure of url"
-  );
+  .withMessage("Incorrect format of url");
 
 bloggersRouter.get("/", (req: Request, res: Response) => {
   const bloggers = bloggersRepository.findBloggers();
@@ -33,7 +31,18 @@ bloggersRouter.post(
     const name = req.body.name;
     const youtubeUrl = req.body.youtubeUrl;
     const newBlogger = bloggersRepository.createBlogger(name, youtubeUrl);
-    res.status(201).send(newBlogger);
+    if (youtubeUrl.length < 101) {
+      res.status(201).send(newBlogger);
+    } else {
+      res.status(400).send({
+        errorsMessages: [
+          {
+            message: "The max length of youtubeUrl is 100 symbols",
+            field: "youtubeUrl",
+          },
+        ],
+      });
+    }
   }
 );
 
@@ -43,11 +52,11 @@ bloggersRouter.get("/:id", (req: Request, res: Response) => {
   const blogger = bloggersRepository.getBloggerById(id);
 
   if (!isIdExist(id, bloggers)) {
-    res.send(404);
+    res.sendStatus(404);
   } else if (blogger) {
     res.status(200).send(blogger);
   } else {
-    res.send(404);
+    res.sendStatus(404);
   }
 });
 
@@ -64,7 +73,7 @@ bloggersRouter.put(
     const youtubeUrl = req.body.youtubeUrl;
 
     if (!isIdExist(id, bloggers)) {
-      res.send(404);
+      res.sendStatus(404);
     } else if (isBloggerUpdated) {
       const blogger = bloggersRepository.getBloggerById(id);
       if (blogger) {
@@ -73,7 +82,7 @@ bloggersRouter.put(
         res.status(204).send(blogger);
       }
     } else {
-      res.status(404);
+      res.sendStatus(404);
     }
   }
 );
@@ -82,8 +91,8 @@ bloggersRouter.delete("/:id", (req: Request, res: Response) => {
   const id = +req.params.id;
   const isVideoDeleted = bloggersRepository.deleteBlogger(id);
   if (isVideoDeleted) {
-    res.send(204);
+    res.sendStatus(204);
   } else {
-    res.send(404);
+    res.sendStatus(404);
   }
 });

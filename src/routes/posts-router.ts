@@ -126,16 +126,16 @@ postsRouter.delete("/:id", (req: Request, res: Response) => {
   const id = +req.params.id;
 
   const posts = postsRepository.findPosts();
-  const isPostExist = posts.findIndex((item: PostType) => item.id === id) > -1;
+  const isPostExist = posts.find((item: PostType) => item.id === id);
 
   if (!isPostExist) {
-    res.send(404);
+    res.sendStatus(404);
     return;
   }
 
   const isPostDeleted = postsRepository.deletePost(id);
   if (!isPostDeleted) {
-    res.send(404);
+    res.sendStatus(404);
     return;
   }
   res.sendStatus(204);
