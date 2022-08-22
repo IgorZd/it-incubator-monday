@@ -41,12 +41,9 @@ videosRouter.post(
 
 videosRouter.delete("/:id", (req: Request, res: Response) => {
   const id = +req.params.id;
-  const videos = videosRepository.findVideos();
   const isVideoDeleted = videosRepository.deleteVideo(id);
 
-  if (!isIdExist(id, videos)) {
-    res.send(404);
-  } else if (isVideoDeleted) {
+  if (isVideoDeleted) {
     res.send(204);
   } else {
     res.send(404);
