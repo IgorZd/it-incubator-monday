@@ -19,8 +19,9 @@ videosRouter.get("/:videoId", (req: Request, res: Response) => {
   const id = +req.params.videoId;
   const videos = videosRepository.findVideos();
   const video = videosRepository.getVideoById(id);
-
-  if (isIdExist(id, videos) && video) {
+  if (!isIdExist(id, videos)) {
+    res.send(404);
+  } else if (video) {
     res.status(200).send(video);
   } else {
     res.send(404);
@@ -43,7 +44,9 @@ videosRouter.delete("/:id", (req: Request, res: Response) => {
   const videos = videosRepository.findVideos();
   const isVideoDeleted = videosRepository.deleteVideo(id);
 
-  if (isIdExist(id, videos) && isVideoDeleted) {
+  if (!isIdExist(id, videos)) {
+    res.send(404);
+  } else if (isVideoDeleted) {
     res.send(204);
   } else {
     res.send(404);
@@ -60,7 +63,9 @@ videosRouter.put(
     const videos = videosRepository.findVideos();
     const title = req.body.title;
 
-    if (isIdExist(id, videos) && isVideoUpdated) {
+    if (!isIdExist(id, videos)) {
+      res.send(404);
+    } else if (isVideoUpdated) {
       const video = videosRepository.getVideoById(id);
       if (video) {
         video.title = title;
