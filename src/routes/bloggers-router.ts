@@ -12,7 +12,6 @@ const nameValidation = body("name")
   .withMessage("Name should consist from 1 to 15 symbols");
 const youtubeUrlValidation = body("youtubeUrl")
   .trim()
-  .isLength({ min: 1, max: 100 })
   .matches(
     /^https:\/\/([a-zA-Z0-9_-]+\.)+[a-zA-Z0-9_-]+(\/[a-zA-Z0-9_-]+)*\/?$/
   )
@@ -71,7 +70,7 @@ bloggersRouter.put(
       if (blogger) {
         blogger.name = name;
         blogger.youtubeUrl = youtubeUrl;
-        res.status(204).send(blogger);
+        res.status(201).send(blogger);
       }
     } else {
       res.status(404);
