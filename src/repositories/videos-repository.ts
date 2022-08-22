@@ -6,6 +6,11 @@ const videos = [
   { id: 5, title: "About JS - 05", author: "it-incubator.eu" },
 ];
 
+export const isIdExist = (id: number, arrayForChecking: any[]) => {
+  const index = arrayForChecking.findIndex((item: any) => item.id === id);
+  return index > -1;
+};
+
 export const videosRepository = {
   findVideos() {
     return videos;

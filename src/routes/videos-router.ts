@@ -1,7 +1,7 @@
 import { Router, Request, Response } from "express";
 import { body } from "express-validator";
 import { inputValidationMiddleware } from "../middlewares/input-validation-middleware";
-import { videosRepository } from "../repositories/videos-repository";
+import { isIdExist, videosRepository } from "../repositories/videos-repository";
 
 export const videosRouter = Router({});
 
@@ -17,9 +17,10 @@ videosRouter.get("/", (req: Request, res: Response) => {
 
 videosRouter.get("/:videoId", (req: Request, res: Response) => {
   const id = +req.params.videoId;
+  const videos = videosRepository.findVideos();
   const video = videosRepository.getVideoById(id);
 
-  if (`${id}`.length > 0 && video) {
+  if (isIdExist(id, videos) && video) {
     res.status(200).send(video);
   } else {
     res.send(404);
@@ -39,8 +40,10 @@ videosRouter.post(
 
 videosRouter.delete("/:id", (req: Request, res: Response) => {
   const id = +req.params.id;
+  const videos = videosRepository.findVideos();
   const isVideoDeleted = videosRepository.deleteVideo(id);
-  if (`${id}`.length > 0 && isVideoDeleted) {
+
+  if (isIdExist(id, videos) && isVideoDeleted) {
     res.send(204);
   } else {
     res.send(404);
@@ -54,9 +57,10 @@ videosRouter.put(
   (req: Request, res: Response) => {
     const id = +req.params.id;
     const isVideoUpdated = videosRepository.updateVideo(id);
+    const videos = videosRepository.findVideos();
     const title = req.body.title;
 
-    if (`${id}`.length > 0 && isVideoUpdated) {
+    if (isIdExist(id, videos) && isVideoUpdated) {
       const video = videosRepository.getVideoById(id);
       if (video) {
         video.title = title;
