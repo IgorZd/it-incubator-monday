@@ -41,18 +41,10 @@ videosRouter.post(
 
 videosRouter.delete("/:id", (req: Request, res: Response) => {
   const id = +req.params.id;
-  // const videos = videosRepository.findVideos();
+  const videos = videosRepository.findVideos();
   const isVideoDeleted = videosRepository.deleteVideo(id);
 
-  if (
-    !isIdExist(id, [
-      { id: 1, title: "About JS - 01", author: "it-incubator.eu" },
-      { id: 2, title: "About JS - 02", author: "it-incubator.eu" },
-      { id: 3, title: "About JS - 03", author: "it-incubator.eu" },
-      { id: 4, title: "About JS - 04", author: "it-incubator.eu" },
-      { id: 5, title: "About JS - 05", author: "it-incubator.eu" },
-    ])
-  ) {
+  if (!isIdExist(id, videos)) {
     res.send(404);
   } else if (isVideoDeleted) {
     res.send(204);

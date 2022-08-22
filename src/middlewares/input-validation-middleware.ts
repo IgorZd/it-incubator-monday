@@ -11,6 +11,6 @@ export const inputValidationMiddleware = (
     const errorsArr = errors
       .array()
       .map((item: any) => ({ message: item.msg, field: item.param }));
-    res.status(400).json({ errors: errorsArr });
+    res.status(400).json({ errorsMessages: errorsArr });
   } else next();
 };
