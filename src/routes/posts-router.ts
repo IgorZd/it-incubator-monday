@@ -125,10 +125,10 @@ postsRouter.put(
 postsRouter.delete("/:id", (req: Request, res: Response) => {
   const id = +req.params.id;
   const isPostDeleted = postsRepository.deletePost(id);
-  const bloggers = bloggersRepository.findBloggers();
-  const bloggerInfo = getInfoAboutBlogger(id, bloggers);
-  const { isBloggerExist, indexOfBlogger } = bloggerInfo;
-  if (isBloggerExist) {
+  const posts = postsRepository.findPosts();
+  const isPostExist = posts.findIndex((item: PostType) => item.id === id) > -1;
+
+  if (isPostExist) {
     if (isPostDeleted) {
       res.send(204);
     } else {
