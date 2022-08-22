@@ -95,18 +95,26 @@ postsRouter.put(
   inputValidationMiddleware,
   (req: Request, res: Response) => {
     const id = +req.params.id;
+    const bloggers = bloggersRepository.findBloggers();
+    const isBloggerIdExist =
+      bloggers.findIndex(
+        (item: BloggerType) => item.id === +req.body.bloggerId
+      ) > -1;
     const isPostUpdated = postsRepository.updatePost(id);
-    const posts = postsRepository.findPosts();
 
-    if (!isIdExist(id, posts)) {
+    if (!isBloggerIdExist) {
       res.status(404);
     } else if (isPostUpdated) {
+      const indexOfBlogger = bloggers.findIndex(
+        (item: BloggerType) => item.id === +req.body.bloggerId
+      );
       const post = postsRepository.getPostById(id);
       if (post) {
         post.title = req.body.title;
         post.shortDescription = req.body.shortDescription;
         post.content = req.body.content;
         post.bloggerId = req.body.bloggerId;
+        post.bloggerName = bloggers[indexOfBlogger].name;
         res.status(204).send(post);
       }
     } else {
