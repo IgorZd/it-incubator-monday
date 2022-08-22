@@ -33,6 +33,15 @@ const validations = [
   generateValidation("bloggerId", "Blogger ID"),
 ];
 
+const getInfoAboutBlogger = (bloggerId: number, bloggers: BloggerType[]) => {
+  const isBloggerExist =
+    bloggers.findIndex((item: BloggerType) => item.id === bloggerId) > -1;
+  const indexOfBlogger = bloggers.findIndex(
+    (item: BloggerType) => item.id === bloggerId
+  );
+  return { isBloggerExist, indexOfBlogger };
+};
+
 postsRouter.get("/", (req: Request, res: Response) => {
   const videos = postsRepository.findPosts();
   res.status(200).send(videos);
@@ -44,15 +53,10 @@ postsRouter.post(
   inputValidationMiddleware,
   (req: Request, res: Response) => {
     const bloggers = bloggersRepository.findBloggers();
-    const isBloggerIdExist =
-      bloggers.findIndex(
-        (item: BloggerType) => item.id === +req.body.bloggerId
-      ) > -1;
+    const bloggerInfo = getInfoAboutBlogger(+req.body.bloggerId, bloggers);
+    const { isBloggerExist, indexOfBlogger } = bloggerInfo;
 
-    if (isBloggerIdExist) {
-      const indexOfBlogger = bloggers.findIndex(
-        (item: BloggerType) => item.id === +req.body.bloggerId
-      );
+    if (isBloggerExist) {
       const data = {
         title: req.body.title,
         shortDescription: req.body.shortDescription,
@@ -96,18 +100,13 @@ postsRouter.put(
   (req: Request, res: Response) => {
     const id = +req.params.id;
     const bloggers = bloggersRepository.findBloggers();
-    const isBloggerIdExist =
-      bloggers.findIndex(
-        (item: BloggerType) => item.id === +req.body.bloggerId
-      ) > -1;
+    const bloggerInfo = getInfoAboutBlogger(+req.body.bloggerId, bloggers);
+    const { isBloggerExist, indexOfBlogger } = bloggerInfo;
     const isPostUpdated = postsRepository.updatePost(id);
 
-    if (!isBloggerIdExist) {
+    if (!isBloggerExist) {
       res.status(404);
     } else if (isPostUpdated) {
-      const indexOfBlogger = bloggers.findIndex(
-        (item: BloggerType) => item.id === +req.body.bloggerId
-      );
       const post = postsRepository.getPostById(id);
       if (post) {
         post.title = req.body.title;
@@ -124,9 +123,17 @@ postsRouter.put(
 );
 
 postsRouter.delete("/:id", (req: Request, res: Response) => {
-  const isPostDeleted = postsRepository.deletePost(+req.params.id);
-  if (isPostDeleted) {
-    res.send(204);
+  const id = +req.params.id;
+  const isPostDeleted = postsRepository.deletePost(id);
+  const bloggers = bloggersRepository.findBloggers();
+  const bloggerInfo = getInfoAboutBlogger(id, bloggers);
+  const { isBloggerExist, indexOfBlogger } = bloggerInfo;
+  if (isBloggerExist) {
+    if (isPostDeleted) {
+      res.send(204);
+    } else {
+      res.send(404);
+    }
   } else {
     res.send(404);
   }
