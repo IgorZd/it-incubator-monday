@@ -85,11 +85,11 @@ postsRouter.get("/:postId", (req: Request, res: Response) => {
   const posts = postsRepository.findPosts();
 
   if (!isIdExist(id, posts)) {
-    res.status(404);
+    res.sendStatus(404);
   } else if (post) {
     res.status(200).send(post);
   } else {
-    res.send(404);
+    res.sendStatus(404);
   }
 });
 
@@ -105,7 +105,7 @@ postsRouter.put(
     const isPostUpdated = postsRepository.updatePost(id);
 
     if (!isBloggerExist || !id) {
-      res.status(404);
+      res.sendStatus(404);
     } else if (isPostUpdated) {
       const post = postsRepository.getPostById(id);
       if (post) {
@@ -117,24 +117,26 @@ postsRouter.put(
         res.status(204).send(post);
       }
     } else {
-      res.status(404);
+      res.sendStatus(404);
     }
   }
 );
 
 postsRouter.delete("/:id", (req: Request, res: Response) => {
   const id = +req.params.id;
-  const isPostDeleted = postsRepository.deletePost(id);
+
   const posts = postsRepository.findPosts();
   const isPostExist = posts.findIndex((item: PostType) => item.id === id) > -1;
 
-  if (isPostExist) {
-    if (isPostDeleted) {
-      res.send(204);
-    } else {
-      res.send(404);
-    }
-  } else {
+  if (!isPostExist) {
     res.send(404);
+    return;
   }
+
+  const isPostDeleted = postsRepository.deletePost(id);
+  if (!isPostDeleted) {
+    res.send(404);
+    return;
+  }
+  res.sendStatus(204);
 });
