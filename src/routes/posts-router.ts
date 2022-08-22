@@ -109,7 +109,7 @@ postsRouter.put(
 
     if (!isBloggerExist) {
       res.status(400).send({
-        errorMessages: [
+        errorsMessages: [
           {
             message: "bloggerId doesn't exist",
             field: "bloggerId",
