@@ -1,3 +1,12 @@
+export interface PostType {
+  id: number;
+  title: string;
+  shortDescription: string;
+  content: string;
+  bloggerId: number;
+  bloggerName: string;
+}
+
 const posts = [
   {
     id: 1,
@@ -38,47 +47,30 @@ export const postsRepository = {
     return posts;
   },
   getPostById(id: number) {
-    const post = posts.find(
-      (item: {
-        id: number;
-        title: string;
-        shortDescription: string;
-        content: string;
-        bloggerId: number;
-        bloggerName: string;
-      }) => item.id === id
-    );
+    const post = posts.find((item: PostType) => item.id === id);
     return post;
   },
   createPosts(data: {
     title: string;
     shortDescription: string;
     content: string;
+    bloggerId: number;
     bloggerName: string;
   }) {
-    const { title, shortDescription, content, bloggerName } = data;
+    const { title, shortDescription, content, bloggerId, bloggerName } = data;
     const newPost = {
       id: +new Date(),
       title,
       shortDescription,
       content,
-      bloggerId: +new Date() + 12,
+      bloggerId,
       bloggerName,
     };
     posts.push(newPost);
     return newPost;
   },
   updatePost(id: number) {
-    const post = posts.find(
-      (item: {
-        id: number;
-        title: string;
-        shortDescription: string;
-        content: string;
-        bloggerId: number;
-        bloggerName: string;
-      }) => item.id === id
-    );
+    const post = posts.find((item: PostType) => item.id === id);
     if (post) {
       return true;
     } else {
