@@ -70,7 +70,7 @@ bloggersRouter.put(
       if (blogger) {
         blogger.name = name;
         blogger.youtubeUrl = youtubeUrl;
-        res.status(201).send(blogger);
+        res.status(204).send(blogger);
       }
     } else {
       res.status(404);
