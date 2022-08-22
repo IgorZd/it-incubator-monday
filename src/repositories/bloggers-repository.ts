@@ -1,3 +1,9 @@
+export interface BloggerType {
+  id: number;
+  name: string;
+  youtubeUrl: string;
+}
+
 const bloggers = [
   { id: 1, name: "MINSKI", youtubeUrl: "https://www.youtube.com/c/VRYBY" },
   {
@@ -31,15 +37,11 @@ export const bloggersRepository = {
     return newBlogger;
   },
   getBloggerById(id: number) {
-    const blogger = bloggers.find(
-      (item: { id: number; name: string; youtubeUrl: string }) => item.id === id
-    );
+    const blogger = bloggers.find((item: BloggerType) => item.id === id);
     return blogger;
   },
   updateBlogger(id: number) {
-    const blogger = bloggers.find(
-      (item: { id: number; name: string; youtubeUrl: string }) => item.id === id
-    );
+    const blogger = bloggers.find((item: BloggerType) => item.id === id);
     if (blogger) {
       return true;
     } else {

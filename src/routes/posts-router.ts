@@ -1,6 +1,10 @@
 import { Router, Request, Response } from "express";
 import { body } from "express-validator";
 import { inputValidationMiddleware } from "../middlewares/input-validation-middleware";
+import {
+  bloggersRepository,
+  BloggerType,
+} from "../repositories/bloggers-repository";
 import { postsRepository, PostType } from "../repositories/posts-repository";
 import { isIdExist } from "../repositories/videos-repository";
 
@@ -39,22 +43,22 @@ postsRouter.post(
   ...validations,
   inputValidationMiddleware,
   (req: Request, res: Response) => {
-    const posts = postsRepository.findPosts();
+    const bloggers = bloggersRepository.findBloggers();
     const isBloggerIdExist =
-      posts.findIndex(
-        (item: PostType) => item.bloggerId === +req.body.bloggerId
+      bloggers.findIndex(
+        (item: BloggerType) => item.id === +req.body.bloggerId
       ) > -1;
 
     if (isBloggerIdExist) {
-      const indexOfBlogger = posts.findIndex(
-        (item: PostType) => item.bloggerId === +req.body.bloggerId
+      const indexOfBlogger = bloggers.findIndex(
+        (item: BloggerType) => item.id === +req.body.bloggerId
       );
       const data = {
         title: req.body.title,
         shortDescription: req.body.shortDescription,
         content: req.body.content,
         bloggerId: +req.body.bloggerId,
-        bloggerName: posts[indexOfBlogger].bloggerName,
+        bloggerName: bloggers[indexOfBlogger].name,
       };
       const newPost = postsRepository.createPosts(data);
       res.status(201).send(newPost);
