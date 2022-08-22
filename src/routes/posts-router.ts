@@ -57,7 +57,7 @@ postsRouter.post(
     const { isBloggerExist, indexOfBlogger } = bloggerInfo;
 
     if (!isBloggerExist) {
-      res.status(404).send({
+      res.status(400).send({
         errorMessages: [
           {
             message: "bloggerId doesn't exist",
@@ -107,9 +107,18 @@ postsRouter.put(
     const { isBloggerExist, indexOfBlogger } = bloggerInfo;
     const isPostUpdated = postsRepository.updatePost(id);
 
-    if (!isBloggerExist || !id) {
-      res.sendStatus(404);
-    } else if (isPostUpdated) {
+    if (!isBloggerExist) {
+      res.status(400).send({
+        errorMessages: [
+          {
+            message: "bloggerId doesn't exist",
+            field: "bloggerId",
+          },
+        ],
+      });
+      return;
+    }
+    if (isPostUpdated) {
       const post = postsRepository.getPostById(id);
       if (post) {
         post.title = req.body.title;
