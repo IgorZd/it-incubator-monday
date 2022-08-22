@@ -19,7 +19,7 @@ videosRouter.get("/:videoId", (req: Request, res: Response) => {
   const id = +req.params.videoId;
   const video = videosRepository.getVideoById(id);
 
-  if (video) {
+  if (`${id}`.length > 0 && video) {
     res.status(200).send(video);
   } else {
     res.send(404);
@@ -33,13 +33,14 @@ videosRouter.post(
   (req: Request, res: Response) => {
     const title = req.body.title;
     const newVideo = videosRepository.createVideo(title);
-    res.send(newVideo);
+    res.status(201).send(newVideo);
   }
 );
 
 videosRouter.delete("/:id", (req: Request, res: Response) => {
-  const isVideoDeleted = videosRepository.deleteVideo(+req.params.id);
-  if (isVideoDeleted) {
+  const id = +req.params.id;
+  const isVideoDeleted = videosRepository.deleteVideo(id);
+  if (`${id}`.length > 0 && isVideoDeleted) {
     res.send(204);
   } else {
     res.send(404);
@@ -55,7 +56,7 @@ videosRouter.put(
     const isVideoUpdated = videosRepository.updateVideo(id);
     const title = req.body.title;
 
-    if (isVideoUpdated) {
+    if (`${id}`.length > 0 && isVideoUpdated) {
       const video = videosRepository.getVideoById(id);
       if (video) {
         video.title = title;
