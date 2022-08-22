@@ -53,7 +53,9 @@ bloggersRouter.get("/:id", (req: Request, res: Response) => {
 
   if (!isIdExist(id, bloggers)) {
     res.sendStatus(404);
-  } else if (blogger) {
+    return;
+  }
+  if (blogger) {
     res.status(200).send(blogger);
   } else {
     res.sendStatus(404);
@@ -74,9 +76,21 @@ bloggersRouter.put(
 
     if (!isIdExist(id, bloggers)) {
       res.sendStatus(404);
-    } else if (isBloggerUpdated) {
+      return;
+    }
+    if (isBloggerUpdated) {
       const blogger = bloggersRepository.getBloggerById(id);
       if (blogger) {
+        if (youtubeUrl.length > 100) {
+          res.status(400).send({
+            errorsMessages: [
+              {
+                message: "The max length of youtubeUrl is 100 symbols",
+                field: "youtubeUrl",
+              },
+            ],
+          });
+        }
         blogger.name = name;
         blogger.youtubeUrl = youtubeUrl;
         res.status(204).send(blogger);
