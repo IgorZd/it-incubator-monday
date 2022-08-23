@@ -6,6 +6,11 @@ import { addressesRouter } from "./routes/addresses-router";
 import { videosRouter } from "./routes/videos-router";
 import { bloggersRouter } from "./routes/bloggers-router";
 import { postsRouter } from "./routes/posts-router";
+import { videosRepository } from "./repositories/videos-repository";
+import { productsRepository } from "./repositories/products-repository";
+import { postsRepository } from "./repositories/posts-repository";
+import { bloggersRepository } from "./repositories/bloggers-repository";
+import { addressesRepository } from "./repositories/addresses-repository";
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -18,6 +23,25 @@ app.use(corsMiddleware);
 
 app.get("/", (req: Request, res: Response) => {
   res.send("Igor123");
+});
+
+app.delete("/all-data", (req: Request, res: Response) => {
+  const isProductsEmpty = productsRepository.removeAllData();
+  const isVideosEmpty = videosRepository.removeAllData();
+  const isPostsEmpty = postsRepository.removeAllData();
+  const isBloggersEmpty = bloggersRepository.removeAllData();
+  const isAddressesEmpty = addressesRepository.removeAllData();
+  if (
+    isProductsEmpty &&
+    isVideosEmpty &&
+    isPostsEmpty &&
+    isBloggersEmpty &&
+    isAddressesEmpty
+  ) {
+    res.sendStatus(204);
+  } else {
+    res.sendStatus(404);
+  }
 });
 
 app.use("/products", productsRouter);

@@ -87,4 +87,10 @@ export const postsRepository = {
 
     return false;
   },
+  removeAllData() {
+    posts.splice(0, posts.length);
+    if (posts.length === 0) {
+      return true;
+    } else false;
+  },
 };

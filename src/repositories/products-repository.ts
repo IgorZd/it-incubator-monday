@@ -46,4 +46,10 @@ export const productsRepository = {
     }
     return false;
   },
+  removeAllData() {
+    products.splice(0, products.length);
+    if (products.length === 0) {
+      return true;
+    } else false;
+  },
 };

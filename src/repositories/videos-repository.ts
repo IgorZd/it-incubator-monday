@@ -1,3 +1,4 @@
+import e from "express";
 import { getRequiredDateFormat } from "../utills/date-format";
 
 type VideosType = {
@@ -102,7 +103,7 @@ export const videosRepository = {
     if (video) {
       return true;
     } else {
-      false;
+      return false;
     }
   },
   deleteVideo(id: number) {
@@ -113,5 +114,11 @@ export const videosRepository = {
       }
     }
     return false;
+  },
+  removeAllData() {
+    videos.splice(0, videos.length);
+    if (videos.length === 0) {
+      return true;
+    } else false;
   },
 };

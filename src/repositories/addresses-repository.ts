@@ -14,4 +14,10 @@ export const addressesRepository = {
     );
     return findedCity;
   },
+  removeAllData() {
+    addresses.splice(0, addresses.length);
+    if (addresses.length === 0) {
+      return true;
+    } else false;
+  },
 };

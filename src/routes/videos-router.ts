@@ -24,11 +24,11 @@ videosRouter.get("/:videoId", (req: Request, res: Response) => {
   const videos = videosRepository.findVideos();
   const video = videosRepository.getVideoById(id);
   if (!isIdExist(id, videos)) {
-    res.send(404);
+    res.sendStatus(404);
   } else if (video) {
     res.status(200).send(video);
   } else {
-    res.send(404);
+    res.sendStatus(404);
   }
 });
 
@@ -55,9 +55,9 @@ videosRouter.delete("/:id", (req: Request, res: Response) => {
   const isVideoDeleted = videosRepository.deleteVideo(id);
 
   if (isVideoDeleted) {
-    res.send(204);
+    res.sendStatus(204);
   } else {
-    res.send(404);
+    res.sendStatus(404);
   }
 });
 
@@ -73,7 +73,7 @@ videosRouter.put(
     const title = req.body.title;
 
     if (!isIdExist(id, videos)) {
-      res.send(404);
+      res.sendStatus(404);
     } else if (isVideoUpdated) {
       const video = videosRepository.getVideoById(id);
       if (video) {
@@ -81,7 +81,7 @@ videosRouter.put(
         res.status(204).send(video);
       }
     } else {
-      res.status(404);
+      res.sendStatus(404);
     }
   }
 );

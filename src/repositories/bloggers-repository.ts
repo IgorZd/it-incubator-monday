@@ -57,4 +57,10 @@ export const bloggersRepository = {
     }
     return false;
   },
+  removeAllData() {
+    bloggers.splice(0, bloggers.length);
+    if (bloggers.length === 0) {
+      return true;
+    } else false;
+  },
 };
