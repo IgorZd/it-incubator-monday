@@ -1,67 +1,11 @@
-import { getRequiredDateFormat } from "../utills/date-format";
-
-type VideosType = {
-  id: number;
-  title: string;
-  author: string;
-  canBeDownloaded: boolean;
-  minAgeRestriction: null;
-  createdAt: string;
-  publicationDate: string;
-  availableResolutions: string[];
-};
+type VideosType = { id: number; title: string; author: string };
 
 const videos = [
-  {
-    id: 1,
-    title: "About JS - 01",
-    author: "it-incubator.eu",
-    canBeDownloaded: true,
-    minAgeRestriction: null,
-    createdAt: "2022-08-23T08:36:01.564Z",
-    publicationDate: "2022-08-23T12:36:01.564Z",
-    availableResolutions: ["P144"],
-  },
-  {
-    id: 2,
-    title: "About JS - 02",
-    author: "it-incubator.eu",
-    canBeDownloaded: true,
-    minAgeRestriction: null,
-    createdAt: "2022-08-22T08:36:01.564Z",
-    publicationDate: "2022-08-22T12:36:01.564Z",
-    availableResolutions: ["P144"],
-  },
-  {
-    id: 3,
-    title: "About JS - 03",
-    author: "it-incubator.eu",
-    canBeDownloaded: true,
-    minAgeRestriction: null,
-    createdAt: "2022-08-21T08:36:01.564Z",
-    publicationDate: "2022-08-21T12:36:01.564Z",
-    availableResolutions: ["P144"],
-  },
-  {
-    id: 4,
-    title: "About JS - 04",
-    author: "it-incubator.eu",
-    canBeDownloaded: true,
-    minAgeRestriction: null,
-    createdAt: "2022-08-20T08:36:01.564Z",
-    publicationDate: "2022-08-20T12:36:01.564Z",
-    availableResolutions: ["P144"],
-  },
-  {
-    id: 5,
-    title: "About JS - 05",
-    author: "it-incubator.eu",
-    canBeDownloaded: true,
-    minAgeRestriction: null,
-    createdAt: "2022-08-19T08:36:01.564Z",
-    publicationDate: "2022-08-19T12:36:01.564Z",
-    availableResolutions: ["P144"],
-  },
+  { id: 1, title: "About JS - 01", author: "it-incubator.eu" },
+  { id: 2, title: "About JS - 02", author: "it-incubator.eu" },
+  { id: 3, title: "About JS - 03", author: "it-incubator.eu" },
+  { id: 4, title: "About JS - 04", author: "it-incubator.eu" },
+  { id: 5, title: "About JS - 05", author: "it-incubator.eu" },
 ];
 
 export const isIdExist = (id: number, arrayForChecking: any[]) => {
@@ -78,21 +22,10 @@ export const videosRepository = {
     return video;
   },
   createVideo(title: string, author: string, availableResolutions?: string[]) {
-    const today = new Date();
     const newVideo = {
       id: +new Date(),
       title,
-      author,
-      canBeDownloaded: true,
-      minAgeRestriction: null,
-      createdAt: getRequiredDateFormat(today, "YYYY-MM-DDTHH:MM:ss.mmZ"),
-      publicationDate: getRequiredDateFormat(
-        new Date(today.setDate(today.getDate() + 1)),
-        "YYYY-MM-DDTHH:MM:ss.mmZ"
-      ),
-      availableResolutions: availableResolutions
-        ? availableResolutions
-        : ["P144"],
+      author: "it-incubator.eu",
     };
     videos.push(newVideo);
     return newVideo;
