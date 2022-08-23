@@ -26,17 +26,18 @@ app.get("/", (req: Request, res: Response) => {
 });
 
 app.delete("/all-data", (req: Request, res: Response) => {
-  const isProductsEmpty = productsRepository.removeAllData();
+  // const isProductsEmpty = productsRepository.removeAllData();
   const isVideosEmpty = videosRepository.removeAllData();
-  const isPostsEmpty = postsRepository.removeAllData();
-  const isBloggersEmpty = bloggersRepository.removeAllData();
-  const isAddressesEmpty = addressesRepository.removeAllData();
+  // const isPostsEmpty = postsRepository.removeAllData();
+  // const isBloggersEmpty = bloggersRepository.removeAllData();
+  // const isAddressesEmpty = addressesRepository.removeAllData();
   if (
-    isProductsEmpty &&
-    isVideosEmpty &&
-    isPostsEmpty &&
-    isBloggersEmpty &&
-    isAddressesEmpty
+    // isProductsEmpty &&
+    // isVideosEmpty &&
+    // isPostsEmpty &&
+    // isBloggersEmpty &&
+    // isAddressesEmpty
+    isVideosEmpty
   ) {
     res.sendStatus(204);
   } else {

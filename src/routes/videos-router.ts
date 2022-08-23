@@ -1,7 +1,11 @@
 import { Router, Request, Response } from "express";
 import { body } from "express-validator";
 import { inputValidationMiddleware } from "../middlewares/input-validation-middleware";
-import { isIdExist, videosRepository } from "../repositories/videos-repository";
+import {
+  isIdExist,
+  isResolutionValid,
+  videosRepository,
+} from "../repositories/videos-repository";
 
 export const videosRouter = Router({});
 
@@ -65,6 +69,10 @@ videosRouter.post(
     const title = req.body.title;
     const author = req.body.author;
     const availableResolutions = req.body.availableResolutions;
+    if (!isResolutionValid(availableResolutions)) {
+      res.sendStatus(400);
+      return;
+    }
     const newVideo = videosRepository.createVideo(
       title,
       author,

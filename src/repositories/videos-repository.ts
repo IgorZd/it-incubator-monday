@@ -11,20 +11,22 @@ type VideosType = {
   availableResolutions: string[];
 };
 
-[
-  {
-    author: "",
-    availableResolutions: ["P144"],
-    canBeDownloaded: false,
-    createdAt:
-      "StringMatching /d{4}-[01]d-[0-3]dT[0-2]d:[0-5]d:[0-5]d.d+([+-][0-2]d:[0-5]d|Z)/",
-    id: 0,
-    minAgeRestriction: null,
-    publicationDate:
-      "StringMatching /d{4}-[01]d-[0-3]dT[0-2]d:[0-5]d:[0-5]d.d+([+-][0-2]d:[0-5]d|Z)/",
-    title: "",
-  },
+const resolutionsList = [
+  "P144",
+  "P240",
+  "P360",
+  "P480",
+  "P720",
+  "P1080",
+  "P1440",
+  "P2160",
 ];
+export const isResolutionValid = (checkArr: string[]) =>
+  checkArr
+    .map((item: string, index: number) =>
+      resolutionsList.find((el: string) => (el === item ? true : false))
+    )
+    .filter((item: string | undefined) => item === undefined).length === 0;
 
 const videos = [
   {
