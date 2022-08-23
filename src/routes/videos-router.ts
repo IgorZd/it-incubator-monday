@@ -33,7 +33,6 @@ const createdAtValidation = body("createdAt")
   .matches("/d{4}-[01]d-[0-3]dT[0-2]d:[0-5]d:[0-5]d.d+([+-][0-2]d:[0-5]d|Z)/")
   .withMessage("Incorrect format");
 const publicationDateValidation = body("publicationDate")
-  .optional()
   .matches("/d{4}-[01]d-[0-3]dT[0-2]d:[0-5]d:[0-5]d.d+([+-][0-2]d:[0-5]d|Z)/")
   .withMessage("Incorrect format");
 
@@ -43,7 +42,6 @@ const validation = [
   canBeDownloadedValidation,
   minAgeRestrictionValidation,
   // createdAtValidation,
-  publicationDateValidation,
 ];
 videosRouter.get("/", (req: Request, res: Response) => {
   const videos = videosRepository.findVideos();
@@ -102,6 +100,7 @@ videosRouter.delete("/:id", (req: Request, res: Response) => {
 videosRouter.put(
   "/:id",
   ...validation,
+  publicationDateValidation,
   inputValidationMiddleware,
   (req: Request, res: Response) => {
     const id = +req.params.id;
