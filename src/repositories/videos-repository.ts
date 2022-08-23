@@ -1,4 +1,3 @@
-import e from "express";
 import { getRequiredDateFormat } from "../utills/date-format";
 
 type VideosType = {
@@ -86,10 +85,10 @@ export const videosRepository = {
       author,
       canBeDownloaded: true,
       minAgeRestriction: null,
-      createdAt: `${getRequiredDateFormat(today, "YYYY-MM-DDTHH:MM:ss.mm")}Z`,
+      createdAt: `${getRequiredDateFormat(today, "YYYY-MM-DDTHH:MM:ss.mmm")}Z`,
       publicationDate: `${getRequiredDateFormat(
         new Date(today.setDate(today.getDate() + 1)),
-        "YYYY-MM-DDTHH:MM:ss.mm"
+        "YYYY-MM-DDTHH:MM:ss.mmm"
       )}Z`,
       availableResolutions: availableResolutions
         ? availableResolutions

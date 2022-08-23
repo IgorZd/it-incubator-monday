@@ -83,6 +83,11 @@ videosRouter.put(
       const video = videosRepository.getVideoById(id);
       if (video) {
         video.title = title;
+        video.author = author;
+        video.availableResolutions = availableResolutions;
+        video.canBeDownloaded = canBeDownloaded;
+        video.minAgeRestriction = minAgeRestriction;
+        video.publicationDate = publicationDate;
         res.status(204).send(video);
       }
     } else {
