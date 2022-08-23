@@ -18,6 +18,7 @@ const authorValidation = body("author")
   .isLength({ min: 1, max: 20 })
   .withMessage("Author should consist from 1 to 20 symbols");
 const canBeDownloadedValidation = body("canBeDownloaded")
+  .optional()
   .isBoolean()
   .withMessage("CanBeDownloade should be boolean");
 const minAgeRestrictionValidation = body("minAgeRestriction")
