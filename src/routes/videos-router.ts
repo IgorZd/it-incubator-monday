@@ -13,7 +13,32 @@ const authorValidation = body("author")
   .trim()
   .isLength({ min: 1, max: 20 })
   .withMessage("Author should consist from 1 to 20 symbols");
+const canBeDownloadedValidation = body("canBeDownloaded")
+  .isBoolean()
+  .withMessage("CanBeDownloade should be boolean");
+const minAgeRestrictionValidation = body("minAgeRestriction")
+  .isFloat({
+    min: 1,
+    max: 18,
+  })
+  .withMessage("MinAgeRestriction should be in range between 1 and 18");
+const createdAtValidation = body("createdAt")
+  .matches("/d{4}-[01]d-[0-3]dT[0-2]d:[0-5]d:[0-5]d.d+([+-][0-2]d:[0-5]d|Z)/")
+  .withMessage("Incorrect format");
+const publicationDateValidation = body("publicationDate")
+  .matches("/d{4}-[01]d-[0-3]dT[0-2]d:[0-5]d:[0-5]d.d+([+-][0-2]d:[0-5]d|Z)/")
+  .withMessage("Incorrect format");
+const availableResolutionsValidation = body("availableResolutions");
 
+const validation = [
+  titleValidation,
+  authorValidation,
+  canBeDownloadedValidation,
+  minAgeRestrictionValidation,
+  createdAtValidation,
+  publicationDateValidation,
+  availableResolutionsValidation,
+];
 videosRouter.get("/", (req: Request, res: Response) => {
   const videos = videosRepository.findVideos();
   res.status(200).send(videos);
@@ -34,8 +59,7 @@ videosRouter.get("/:videoId", (req: Request, res: Response) => {
 
 videosRouter.post(
   "/",
-  titleValidation,
-  authorValidation,
+  ...validation,
   inputValidationMiddleware,
   (req: Request, res: Response) => {
     const title = req.body.title;
@@ -63,8 +87,7 @@ videosRouter.delete("/:id", (req: Request, res: Response) => {
 
 videosRouter.put(
   "/:id",
-  titleValidation,
-  authorValidation,
+  ...validation,
   inputValidationMiddleware,
   (req: Request, res: Response) => {
     const id = +req.params.id;
