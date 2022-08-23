@@ -33,7 +33,7 @@ const createdAtValidation = body("createdAt")
   .matches("/d{4}-[01]d-[0-3]dT[0-2]d:[0-5]d:[0-5]d.d+([+-][0-2]d:[0-5]d|Z)/")
   .withMessage("Incorrect format");
 const publicationDateValidation = body("publicationDate")
-  .matches("/d{4}-[01]d-[0-3]dT[0-2]d:[0-5]d:[0-5]d.d+([+-][0-2]d:[0-5]d|Z)/")
+  .matches(/^(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z)$/)
   .withMessage("Incorrect format");
 
 const validation = [
