@@ -9,6 +9,10 @@ const titleValidation = body("title")
   .trim()
   .isLength({ min: 1, max: 40 })
   .withMessage("Title should consist from 1 to 40 symbols");
+const authorValidation = body("author")
+  .trim()
+  .isLength({ min: 1, max: 20 })
+  .withMessage("Author should consist from 1 to 20 symbols");
 
 videosRouter.get("/", (req: Request, res: Response) => {
   const videos = videosRepository.findVideos();
@@ -31,10 +35,17 @@ videosRouter.get("/:videoId", (req: Request, res: Response) => {
 videosRouter.post(
   "/",
   titleValidation,
+  authorValidation,
   inputValidationMiddleware,
   (req: Request, res: Response) => {
     const title = req.body.title;
-    const newVideo = videosRepository.createVideo(title);
+    const author = req.body.author;
+    const availableResolutions = req.body.availableResolutions;
+    const newVideo = videosRepository.createVideo(
+      title,
+      author,
+      availableResolutions
+    );
     res.status(201).send(newVideo);
   }
 );
@@ -53,6 +64,7 @@ videosRouter.delete("/:id", (req: Request, res: Response) => {
 videosRouter.put(
   "/:id",
   titleValidation,
+  authorValidation,
   inputValidationMiddleware,
   (req: Request, res: Response) => {
     const id = +req.params.id;
