@@ -33,11 +33,11 @@ const availableResolutionsValidation = body("availableResolutions");
 const validation = [
   titleValidation,
   authorValidation,
-  canBeDownloadedValidation,
-  minAgeRestrictionValidation,
-  createdAtValidation,
-  publicationDateValidation,
-  availableResolutionsValidation,
+  // canBeDownloadedValidation,
+  // minAgeRestrictionValidation,
+  // createdAtValidation,
+  // publicationDateValidation,
+  // availableResolutionsValidation,
 ];
 videosRouter.get("/", (req: Request, res: Response) => {
   const videos = videosRepository.findVideos();
