@@ -71,6 +71,11 @@ videosRouter.put(
     const isVideoUpdated = videosRepository.updateVideo(id);
     const videos = videosRepository.findVideos();
     const title = req.body.title;
+    const author = req.body.author;
+    const availableResolutions = req.body.availableResolutions;
+    const canBeDownloaded = req.body.canBeDownloaded;
+    const minAgeRestriction = req.body.minAgeRestriction;
+    const publicationDate = req.body.publicationDate;
 
     if (!isIdExist(id, videos)) {
       res.sendStatus(404);

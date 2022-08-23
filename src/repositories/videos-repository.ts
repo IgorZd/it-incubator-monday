@@ -6,7 +6,7 @@ type VideosType = {
   title: string;
   author: string;
   canBeDownloaded: boolean;
-  minAgeRestriction: null;
+  minAgeRestriction: null | number;
   createdAt: string;
   publicationDate: string;
   availableResolutions: string[];
@@ -86,11 +86,11 @@ export const videosRepository = {
       author,
       canBeDownloaded: true,
       minAgeRestriction: null,
-      createdAt: getRequiredDateFormat(today, "YYYY-MM-DDTHH:MM:ss.mmZ"),
-      publicationDate: getRequiredDateFormat(
+      createdAt: `${getRequiredDateFormat(today, "YYYY-MM-DDTHH:MM:ss.mm")}Z`,
+      publicationDate: `${getRequiredDateFormat(
         new Date(today.setDate(today.getDate() + 1)),
-        "YYYY-MM-DDTHH:MM:ss.mmZ"
-      ),
+        "YYYY-MM-DDTHH:MM:ss.mm"
+      )}Z`,
       availableResolutions: availableResolutions
         ? availableResolutions
         : ["P144"],
