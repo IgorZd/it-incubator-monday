@@ -85,11 +85,11 @@ export const videosRepository = {
       author,
       canBeDownloaded: true,
       minAgeRestriction: null,
-      createdAt: `${getRequiredDateFormat(today, "yyyy-MM-ddTHH:mm:ss.SSSZ")}`,
+      createdAt: `${getRequiredDateFormat(today, "yyyy-MM-ddTHH:mm:ss.SSS")}`,
       publicationDate: `${getRequiredDateFormat(
         new Date(today.setDate(today.getDate() + 1)),
-        "yyyy-MM-ddTHH:mm:ss.SSSZ"
-      )}Z`,
+        "yyyy-MM-ddTHH:mm:ss.SSS"
+      )}`,
       availableResolutions: availableResolutions
         ? availableResolutions
         : ["P144"],
