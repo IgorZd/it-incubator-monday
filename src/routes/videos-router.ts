@@ -43,7 +43,7 @@ const validation = [
   canBeDownloadedValidation,
   minAgeRestrictionValidation,
   // createdAtValidation,
-  // publicationDateValidation,
+  publicationDateValidation,
 ];
 videosRouter.get("/", (req: Request, res: Response) => {
   const videos = videosRepository.findVideos();
