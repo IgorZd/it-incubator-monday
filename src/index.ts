@@ -27,22 +27,22 @@ app.get("/", (req: Request, res: Response) => {
 
 app.delete("/all-data", (req: Request, res: Response) => {
   // const isProductsEmpty = productsRepository.removeAllData();
-  const isVideosEmpty = videosRepository.removeAllData();
+  videosRepository.removeAllData();
   // const isPostsEmpty = postsRepository.removeAllData();
   // const isBloggersEmpty = bloggersRepository.removeAllData();
   // const isAddressesEmpty = addressesRepository.removeAllData();
-  if (
-    // isProductsEmpty &&
-    // isVideosEmpty &&
-    // isPostsEmpty &&
-    // isBloggersEmpty &&
-    // isAddressesEmpty
-    isVideosEmpty
-  ) {
-    res.sendStatus(204);
-  } else {
-    res.sendStatus(404);
-  }
+  // if (
+  // isProductsEmpty &&
+  // isVideosEmpty &&
+  // isPostsEmpty &&
+  // isBloggersEmpty &&
+  // isAddressesEmpty
+  // isVideosEmpty
+  // ) {
+  res.sendStatus(204);
+  // } else {
+  //   res.sendStatus(404);
+  // }
 });
 
 app.use("/products", productsRouter);
