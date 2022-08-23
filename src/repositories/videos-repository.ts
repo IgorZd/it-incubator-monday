@@ -98,7 +98,7 @@ export const videosRepository = {
       id: +new Date(),
       title,
       author,
-      canBeDownloaded: true,
+      canBeDownloaded: false,
       minAgeRestriction: null,
       createdAt: `${getRequiredDateFormat(today, "yyyy-MM-DDTHH:mm:ss.SSS")}Z`,
       publicationDate: `${getRequiredDateFormat(
