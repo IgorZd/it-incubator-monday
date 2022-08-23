@@ -11,6 +11,21 @@ type VideosType = {
   availableResolutions: string[];
 };
 
+[
+  {
+    author: "",
+    availableResolutions: ["P144"],
+    canBeDownloaded: false,
+    createdAt:
+      "StringMatching /d{4}-[01]d-[0-3]dT[0-2]d:[0-5]d:[0-5]d.d+([+-][0-2]d:[0-5]d|Z)/",
+    id: 0,
+    minAgeRestriction: null,
+    publicationDate:
+      "StringMatching /d{4}-[01]d-[0-3]dT[0-2]d:[0-5]d:[0-5]d.d+([+-][0-2]d:[0-5]d|Z)/",
+    title: "",
+  },
+];
+
 const videos = [
   {
     id: 1,
@@ -85,10 +100,10 @@ export const videosRepository = {
       author,
       canBeDownloaded: true,
       minAgeRestriction: null,
-      createdAt: `${getRequiredDateFormat(today, "yyyy-MM-ddTHH:mm:ss.SSS")}`,
+      createdAt: `${getRequiredDateFormat(today, "yyyy-MM-DDTHH:mm:ss.SSS")}`,
       publicationDate: `${getRequiredDateFormat(
         new Date(today.setDate(today.getDate() + 1)),
-        "yyyy-MM-ddTHH:mm:ss.SSS"
+        "yyyy-MM-DDTHH:mm:ss.SSS"
       )}`,
       availableResolutions: availableResolutions
         ? availableResolutions
