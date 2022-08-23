@@ -32,16 +32,14 @@ const createdAtValidation = body("createdAt")
 const publicationDateValidation = body("publicationDate")
   .matches("/d{4}-[01]d-[0-3]dT[0-2]d:[0-5]d:[0-5]d.d+([+-][0-2]d:[0-5]d|Z)/")
   .withMessage("Incorrect format");
-const availableResolutionsValidation = body("availableResolutions");
 
 const validation = [
   titleValidation,
   authorValidation,
-  // canBeDownloadedValidation,
+  canBeDownloadedValidation,
   // minAgeRestrictionValidation,
   // createdAtValidation,
   // publicationDateValidation,
-  // availableResolutionsValidation,
 ];
 videosRouter.get("/", (req: Request, res: Response) => {
   const videos = videosRepository.findVideos();
@@ -70,7 +68,11 @@ videosRouter.post(
     const author = req.body.author;
     const availableResolutions = req.body.availableResolutions;
     if (!isResolutionValid(availableResolutions)) {
-      res.sendStatus(400);
+      res.status(400).send({
+        errorsMessages: [
+          { message: "Invalid resolutions", field: "availableResolutions" },
+        ],
+      });
       return;
     }
     const newVideo = videosRepository.createVideo(
