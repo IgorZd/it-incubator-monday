@@ -22,6 +22,7 @@ const resolutionsList = [
   "P2160",
 ];
 export const isResolutionValid = (checkArr: string[]) =>
+  checkArr &&
   checkArr
     .map((item: string, index: number) =>
       resolutionsList.find((el: string) => (el === item ? true : false))
