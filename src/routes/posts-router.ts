@@ -151,7 +151,7 @@ postsRouter.put(
         post.title = req.body.title;
         post.shortDescription = req.body.shortDescription;
         post.content = req.body.content;
-        post.bloggerId = req.body.bloggerId;
+        post.bloggerId = +req.body.bloggerId;
         post.bloggerName = bloggers[indexOfBlogger].name;
         res.status(204).send(post);
       }
