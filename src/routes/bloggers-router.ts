@@ -31,7 +31,21 @@ bloggersRouter.post(
     const name = req.body.name;
     const youtubeUrl = req.body.youtubeUrl;
     const newBlogger = bloggersRepository.createBlogger(name, youtubeUrl);
-    if (youtubeUrl.length < 101) {
+    const isAuthorized = req.get("Authorization");
+
+    if (!isAuthorized) {
+      res.status(401).send({
+        errorsMessages: [
+          {
+            message: "Not authorized",
+            field: "Authorization",
+          },
+        ],
+      });
+      return;
+    }
+
+    if (youtubeUrl.length < 101 && isAuthorized) {
       res.status(201).send(newBlogger);
     } else {
       res.status(400).send({
@@ -73,12 +87,24 @@ bloggersRouter.put(
     const bloggers = bloggersRepository.findBloggers();
     const name = req.body.name;
     const youtubeUrl = req.body.youtubeUrl;
+    const isAuthorized = req.get("Authorization");
 
     if (!isIdExist(id, bloggers)) {
       res.sendStatus(404);
       return;
     }
-    if (isBloggerUpdated) {
+    if (!isAuthorized) {
+      res.status(401).send({
+        errorsMessages: [
+          {
+            message: "Not authorized",
+            field: "Authorization",
+          },
+        ],
+      });
+      return;
+    }
+    if (isBloggerUpdated && isAuthorized) {
       const blogger = bloggersRepository.getBloggerById(id);
       if (blogger) {
         if (youtubeUrl.length > 100) {
@@ -104,7 +130,21 @@ bloggersRouter.put(
 bloggersRouter.delete("/:id", (req: Request, res: Response) => {
   const id = `${+req.params.id}`;
   const isVideoDeleted = bloggersRepository.deleteBlogger(id);
-  if (isVideoDeleted) {
+  const isAuthorized = req.get("Authorization");
+
+  if (!isAuthorized) {
+    res.status(401).send({
+      errorsMessages: [
+        {
+          message: "Not authorized",
+          field: "Authorization",
+        },
+      ],
+    });
+    return;
+  }
+
+  if (isVideoDeleted && isAuthorized) {
     res.sendStatus(204);
   } else {
     res.sendStatus(404);
