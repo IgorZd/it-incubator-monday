@@ -16,7 +16,7 @@ const generateValidation = (fieldName: string, name: string) => {
       fieldName === "title"
         ? { min: 1, max: 30 }
         : fieldName === "shortDescription"
-        ? { min: 1, max: 100 }
+        ? { min: 1, max: 99 }
         : fieldName === "content"
         ? { min: 1, max: 1000 }
         : { min: 1 }
@@ -86,7 +86,7 @@ postsRouter.post(
         title: req.body.title,
         shortDescription: req.body.shortDescription,
         content: req.body.content,
-        bloggerId: `${+req.body.bloggerId}`,
+        bloggerId: +req.body.bloggerId,
         bloggerName: bloggers[indexOfBlogger].name,
       };
       const newPost = postsRepository.createPosts(data);
