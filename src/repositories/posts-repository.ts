@@ -3,7 +3,7 @@ export interface PostType {
   title: string;
   shortDescription: string;
   content: string;
-  bloggerId: number;
+  bloggerId: string;
   bloggerName: string;
 }
 
@@ -13,7 +13,7 @@ const posts = [
     title: "Title 1",
     shortDescription: "Short description 1",
     content: "Content 1",
-    bloggerId: 1,
+    bloggerId: "1",
     bloggerName: "Blogger name 1",
   },
   {
@@ -21,7 +21,7 @@ const posts = [
     title: "Title 2",
     shortDescription: "Short description 2",
     content: "Content 2",
-    bloggerId: 2,
+    bloggerId: "2",
     bloggerName: "Blogger name 2",
   },
   {
@@ -29,7 +29,7 @@ const posts = [
     title: "Title 3",
     shortDescription: "Short description 3",
     content: "Content 3",
-    bloggerId: 3,
+    bloggerId: "3",
     bloggerName: "Blogger name 3",
   },
   {
@@ -37,7 +37,7 @@ const posts = [
     title: "Title 4",
     shortDescription: "Short description 4",
     content: "Content 4",
-    bloggerId: 4,
+    bloggerId: "4",
     bloggerName: "Blogger name 4",
   },
 ];
@@ -54,7 +54,7 @@ export const postsRepository = {
     title: string;
     shortDescription: string;
     content: string;
-    bloggerId: number;
+    bloggerId: string;
     bloggerName: string;
   }) {
     const { title, shortDescription, content, bloggerId, bloggerName } = data;

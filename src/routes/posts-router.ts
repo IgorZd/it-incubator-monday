@@ -86,7 +86,7 @@ postsRouter.post(
         title: req.body.title,
         shortDescription: req.body.shortDescription,
         content: req.body.content,
-        bloggerId: +req.body.bloggerId,
+        bloggerId: `${+req.body.bloggerId}`,
         bloggerName: bloggers[indexOfBlogger].name,
       };
       const newPost = postsRepository.createPosts(data);
@@ -151,7 +151,7 @@ postsRouter.put(
         post.title = req.body.title;
         post.shortDescription = req.body.shortDescription;
         post.content = req.body.content;
-        post.bloggerId = +req.body.bloggerId;
+        post.bloggerId = req.body.bloggerId;
         post.bloggerName = bloggers[indexOfBlogger].name;
         res.status(204).send(post);
       }
