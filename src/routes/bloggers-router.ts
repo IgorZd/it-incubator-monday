@@ -61,7 +61,7 @@ bloggersRouter.post(
 );
 
 bloggersRouter.get("/:id", (req: Request, res: Response) => {
-  const id = `${+req.params.id}`;
+  const id = +req.params.id;
   const bloggers = bloggersRepository.findBloggers();
   const blogger = bloggersRepository.getBloggerById(id);
 
@@ -82,17 +82,13 @@ bloggersRouter.put(
   youtubeUrlValidation,
   inputValidationMiddleware,
   (req: Request, res: Response) => {
-    const id = `${+req.params.id}`;
+    const id = +req.params.id;
     const isBloggerUpdated = bloggersRepository.updateBlogger(id);
     const bloggers = bloggersRepository.findBloggers();
     const name = req.body.name;
     const youtubeUrl = req.body.youtubeUrl;
     const isAuthorized = req.get("Authorization");
 
-    if (!isIdExist(id, bloggers)) {
-      res.sendStatus(404);
-      return;
-    }
     if (!isAuthorized) {
       res.status(401).send({
         errorsMessages: [
@@ -104,6 +100,12 @@ bloggersRouter.put(
       });
       return;
     }
+
+    if (!isIdExist(id, bloggers)) {
+      res.sendStatus(404);
+      return;
+    }
+
     if (isBloggerUpdated && isAuthorized) {
       const blogger = bloggersRepository.getBloggerById(id);
       if (blogger) {
@@ -128,7 +130,7 @@ bloggersRouter.put(
 );
 
 bloggersRouter.delete("/:id", (req: Request, res: Response) => {
-  const id = `${+req.params.id}`;
+  const id = +req.params.id;
   const isVideoDeleted = bloggersRepository.deleteBlogger(id);
   const isAuthorized = req.get("Authorization");
 
