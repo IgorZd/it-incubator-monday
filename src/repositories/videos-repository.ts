@@ -82,7 +82,7 @@ const videos = [
   },
 ];
 
-export const isIdExist = (id: number, arrayForChecking: any[]) => {
+export const isIdExist = (id: number | string, arrayForChecking: any[]) => {
   const index = arrayForChecking.findIndex((item: any) => item.id === id);
   return index > -1;
 };

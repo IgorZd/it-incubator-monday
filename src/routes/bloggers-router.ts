@@ -47,7 +47,7 @@ bloggersRouter.post(
 );
 
 bloggersRouter.get("/:id", (req: Request, res: Response) => {
-  const id = +req.params.id;
+  const id = `${+req.params.id}`;
   const bloggers = bloggersRepository.findBloggers();
   const blogger = bloggersRepository.getBloggerById(id);
 
@@ -68,7 +68,7 @@ bloggersRouter.put(
   youtubeUrlValidation,
   inputValidationMiddleware,
   (req: Request, res: Response) => {
-    const id = +req.params.id;
+    const id = `${+req.params.id}`;
     const isBloggerUpdated = bloggersRepository.updateBlogger(id);
     const bloggers = bloggersRepository.findBloggers();
     const name = req.body.name;
@@ -102,7 +102,7 @@ bloggersRouter.put(
 );
 
 bloggersRouter.delete("/:id", (req: Request, res: Response) => {
-  const id = +req.params.id;
+  const id = `${+req.params.id}`;
   const isVideoDeleted = bloggersRepository.deleteBlogger(id);
   if (isVideoDeleted) {
     res.sendStatus(204);
