@@ -33,7 +33,7 @@ const validations = [
   generateValidation("bloggerId", "Blogger ID"),
 ];
 
-const getInfoAboutBlogger = (bloggerId: number, bloggers: BloggerType[]) => {
+const getInfoAboutBlogger = (bloggerId: string, bloggers: BloggerType[]) => {
   const isBloggerExist =
     bloggers.findIndex((item: BloggerType) => item.id === bloggerId) > -1;
   const indexOfBlogger = bloggers.findIndex(
@@ -53,7 +53,7 @@ postsRouter.post(
   inputValidationMiddleware,
   (req: Request, res: Response) => {
     const bloggers = bloggersRepository.findBloggers();
-    const bloggerInfo = getInfoAboutBlogger(+req.body.bloggerId, bloggers);
+    const bloggerInfo = getInfoAboutBlogger(req.body.bloggerId, bloggers);
     const { isBloggerExist, indexOfBlogger } = bloggerInfo;
     const isAuthorized = req.get("Authorization");
 
