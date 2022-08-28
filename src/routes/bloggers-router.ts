@@ -45,7 +45,7 @@ bloggersRouter.post(
       return;
     }
 
-    if (youtubeUrl.length < 101 && isAuthorized) {
+    if (youtubeUrl.length < 101) {
       res.status(201).send(newBlogger);
     } else {
       res.status(400).send({
@@ -106,7 +106,7 @@ bloggersRouter.put(
       return;
     }
 
-    if (isBloggerUpdated && isAuthorized) {
+    if (isBloggerUpdated) {
       const blogger = bloggersRepository.getBloggerById(id);
       if (blogger) {
         if (youtubeUrl.length > 100) {
@@ -146,7 +146,7 @@ bloggersRouter.delete("/:id", (req: Request, res: Response) => {
     return;
   }
 
-  if (isVideoDeleted && isAuthorized) {
+  if (isVideoDeleted) {
     res.sendStatus(204);
   } else {
     res.sendStatus(404);

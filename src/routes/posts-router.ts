@@ -81,7 +81,7 @@ postsRouter.post(
       return;
     }
 
-    if (isBloggerExist && isAuthorized) {
+    if (isBloggerExist) {
       const data = {
         title: req.body.title,
         shortDescription: req.body.shortDescription,
@@ -145,7 +145,7 @@ postsRouter.put(
       return;
     }
 
-    if (isPostUpdated && isAuthorized) {
+    if (isPostUpdated) {
       const post = postsRepository.getPostById(id);
       if (post) {
         post.title = req.body.title;
