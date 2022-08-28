@@ -81,16 +81,18 @@ postsRouter.post(
       return;
     }
 
-    if (isBloggerExist) {
-      const data = {
-        title: req.body.title,
-        shortDescription: req.body.shortDescription,
-        content: req.body.content,
-        bloggerId: req.body.bloggerId,
-        bloggerName: bloggers[indexOfBlogger].name,
-      };
-      const newPost = postsRepository.createPosts(data);
-      res.status(201).send(newPost);
+    if (isAuthorized) {
+      if (isBloggerExist) {
+        const data = {
+          title: req.body.title,
+          shortDescription: req.body.shortDescription,
+          content: req.body.content,
+          bloggerId: req.body.bloggerId,
+          bloggerName: bloggers[indexOfBlogger].name,
+        };
+        const newPost = postsRepository.createPosts(data);
+        res.status(201).send(newPost);
+      }
     }
   }
 );
@@ -118,7 +120,6 @@ postsRouter.put(
     const bloggers = bloggersRepository.findBloggers();
     const bloggerInfo = getInfoAboutBlogger(req.body.bloggerId, bloggers);
     const { isBloggerExist, indexOfBlogger } = bloggerInfo;
-    const isPostUpdated = postsRepository.updatePost(id);
     const isAuthorized = req.get("Authorization");
 
     if (!isAuthorized) {
@@ -145,18 +146,22 @@ postsRouter.put(
       return;
     }
 
-    if (isPostUpdated) {
-      const post = postsRepository.getPostById(id);
-      if (post) {
-        post.title = req.body.title;
-        post.shortDescription = req.body.shortDescription;
-        post.content = req.body.content;
-        post.bloggerId = req.body.bloggerId;
-        post.bloggerName = bloggers[indexOfBlogger].name;
-        res.status(204).send(post);
+    if (isAuthorized) {
+      const isPostUpdated = postsRepository.updatePost(id);
+
+      if (isPostUpdated) {
+        const post = postsRepository.getPostById(id);
+        if (post) {
+          post.title = req.body.title;
+          post.shortDescription = req.body.shortDescription;
+          post.content = req.body.content;
+          post.bloggerId = req.body.bloggerId;
+          post.bloggerName = bloggers[indexOfBlogger].name;
+          res.status(204).send(post);
+        }
+      } else {
+        res.sendStatus(404);
       }
-    } else {
-      res.sendStatus(404);
     }
   }
 );
@@ -184,11 +189,12 @@ postsRouter.delete("/:id", (req: Request, res: Response) => {
     res.sendStatus(404);
     return;
   }
-
-  const isPostDeleted = postsRepository.deletePost(id);
-  if (!isPostDeleted) {
-    res.sendStatus(404);
-    return;
+  if (isAuthorized) {
+    const isPostDeleted = postsRepository.deletePost(id);
+    if (!isPostDeleted) {
+      res.sendStatus(404);
+      return;
+    }
+    res.sendStatus(204);
   }
-  res.sendStatus(204);
 });

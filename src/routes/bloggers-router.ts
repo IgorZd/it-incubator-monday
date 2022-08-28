@@ -30,7 +30,7 @@ bloggersRouter.post(
   (req: Request, res: Response) => {
     const name = req.body.name;
     const youtubeUrl = req.body.youtubeUrl;
-    const newBlogger = bloggersRepository.createBlogger(name, youtubeUrl);
+
     const isAuthorized = req.get("Authorization");
 
     if (!isAuthorized) {
@@ -44,18 +44,21 @@ bloggersRouter.post(
       });
       return;
     }
+    if (isAuthorized) {
+      const newBlogger = bloggersRepository.createBlogger(name, youtubeUrl);
 
-    if (youtubeUrl.length < 101) {
-      res.status(201).send(newBlogger);
-    } else {
-      res.status(400).send({
-        errorsMessages: [
-          {
-            message: "The max length of youtubeUrl is 100 symbols",
-            field: "youtubeUrl",
-          },
-        ],
-      });
+      if (youtubeUrl.length < 101) {
+        res.status(201).send(newBlogger);
+      } else {
+        res.status(400).send({
+          errorsMessages: [
+            {
+              message: "The max length of youtubeUrl is 100 symbols",
+              field: "youtubeUrl",
+            },
+          ],
+        });
+      }
     }
   }
 );
@@ -83,7 +86,7 @@ bloggersRouter.put(
   inputValidationMiddleware,
   (req: Request, res: Response) => {
     const id = req.params.id;
-    const isBloggerUpdated = bloggersRepository.updateBlogger(id);
+
     const bloggers = bloggersRepository.findBloggers();
     const name = req.body.name;
     const youtubeUrl = req.body.youtubeUrl;
@@ -106,32 +109,36 @@ bloggersRouter.put(
       return;
     }
 
-    if (isBloggerUpdated) {
-      const blogger = bloggersRepository.getBloggerById(id);
-      if (blogger) {
-        if (youtubeUrl.length > 100) {
-          res.status(400).send({
-            errorsMessages: [
-              {
-                message: "The max length of youtubeUrl is 100 symbols",
-                field: "youtubeUrl",
-              },
-            ],
-          });
+    if (isAuthorized) {
+      const isBloggerUpdated = bloggersRepository.updateBlogger(id);
+
+      if (isBloggerUpdated) {
+        const blogger = bloggersRepository.getBloggerById(id);
+
+        if (blogger) {
+          if (youtubeUrl.length > 100) {
+            res.status(400).send({
+              errorsMessages: [
+                {
+                  message: "The max length of youtubeUrl is 100 symbols",
+                  field: "youtubeUrl",
+                },
+              ],
+            });
+          }
+          blogger.name = name;
+          blogger.youtubeUrl = youtubeUrl;
+          res.status(204).send(blogger);
         }
-        blogger.name = name;
-        blogger.youtubeUrl = youtubeUrl;
-        res.status(204).send(blogger);
+      } else {
+        res.sendStatus(404);
       }
-    } else {
-      res.sendStatus(404);
     }
   }
 );
 
 bloggersRouter.delete("/:id", (req: Request, res: Response) => {
   const id = req.params.id;
-  const isVideoDeleted = bloggersRepository.deleteBlogger(id);
   const isAuthorized = req.get("Authorization");
 
   if (!isAuthorized) {
@@ -146,9 +153,12 @@ bloggersRouter.delete("/:id", (req: Request, res: Response) => {
     return;
   }
 
-  if (isVideoDeleted) {
-    res.sendStatus(204);
-  } else {
-    res.sendStatus(404);
+  if (isAuthorized) {
+    const isVideoDeleted = bloggersRepository.deleteBlogger(id);
+    if (isVideoDeleted) {
+      res.sendStatus(204);
+    } else {
+      res.sendStatus(404);
+    }
   }
 });

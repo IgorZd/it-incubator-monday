@@ -29,7 +29,7 @@ export const bloggersRepository = {
   },
   createBlogger(name: string, youtubeUrl: string) {
     const newBlogger = {
-      id: `${new Date()}`,
+      id: `${+new Date()}`,
       name,
       youtubeUrl,
     };
