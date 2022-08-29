@@ -71,12 +71,15 @@ bloggersRouter.get("/:id", (req: Request, res: Response) => {
   const blogger = bloggersRepository.getBloggerById(id);
 
   if (!isIdExist(id, bloggers)) {
+    console.log("Is exist?");
     res.sendStatus(404);
     return;
   }
   if (blogger) {
+    console.log("Exist");
     res.status(200).send(blogger);
   } else {
+    console.log("Error");
     res.sendStatus(404);
   }
 });
