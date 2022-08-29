@@ -7,7 +7,7 @@ import { bloggersRepository } from "../repositories/bloggers-repository";
 import {
   nameValidation,
   youtubeUrlValidationFormat,
-  youtubeUrlValidationLength,
+  // youtubeUrlValidationLength,
 } from "../validations/bloggers-validation";
 
 export const bloggersRouter = Router({});
@@ -23,7 +23,7 @@ bloggersRouter.post(
   authMiddleware,
   nameValidation,
   youtubeUrlValidationFormat,
-  youtubeUrlValidationLength,
+  // youtubeUrlValidationLength,
   inputValidationMiddleware,
   (req: Request, res: Response) => {
     const name: string = req.body.name;
@@ -55,7 +55,7 @@ bloggersRouter.put(
   isBloggerIdExistMiddleware,
   nameValidation,
   youtubeUrlValidationFormat,
-  youtubeUrlValidationLength,
+  // youtubeUrlValidationLength,
   inputValidationMiddleware,
   (req: Request, res: Response) => {
     const id = +req.params.bloggerId;
