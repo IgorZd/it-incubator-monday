@@ -1,5 +1,6 @@
 import { Router, Request, Response } from "express";
 import { body } from "express-validator";
+import { basicAuthHeaderBase64 } from "../consts/basicAuthHeaderBase64";
 import { inputValidationMiddleware } from "../middlewares/input-validation-middleware";
 import { bloggersRepository } from "../repositories/bloggers-repository";
 import { isIdExist } from "../repositories/videos-repository";
@@ -31,7 +32,8 @@ bloggersRouter.post(
     const name = req.body.name;
     const youtubeUrl = req.body.youtubeUrl;
 
-    const isAuthorized = req.get("Authorization");
+    const authHeader = req.headers.authorization;
+    const isAuthorized = authHeader === basicAuthHeaderBase64;
 
     if (!isAuthorized) {
       res.status(401).send({
@@ -64,7 +66,7 @@ bloggersRouter.post(
 );
 
 bloggersRouter.get("/:id", (req: Request, res: Response) => {
-  const id = req.params.id;
+  const id = +req.params.id;
   const bloggers = bloggersRepository.findBloggers();
   const blogger = bloggersRepository.getBloggerById(id);
 
@@ -85,12 +87,13 @@ bloggersRouter.put(
   youtubeUrlValidation,
   inputValidationMiddleware,
   (req: Request, res: Response) => {
-    const id = req.params.id;
+    const id = +req.params.id;
 
     const bloggers = bloggersRepository.findBloggers();
     const name = req.body.name;
     const youtubeUrl = req.body.youtubeUrl;
-    const isAuthorized = req.get("Authorization");
+    const authHeader = req.headers.authorization;
+    const isAuthorized = authHeader === basicAuthHeaderBase64;
 
     if (!isAuthorized) {
       res.status(401).send({
@@ -138,8 +141,9 @@ bloggersRouter.put(
 );
 
 bloggersRouter.delete("/:id", (req: Request, res: Response) => {
-  const id = req.params.id;
-  const isAuthorized = req.get("Authorization");
+  const id = +req.params.id;
+  const authHeader = req.headers.authorization;
+  const isAuthorized = authHeader === basicAuthHeaderBase64;
 
   if (!isAuthorized) {
     res.status(401).send({

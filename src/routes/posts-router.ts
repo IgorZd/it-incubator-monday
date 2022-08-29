@@ -1,5 +1,6 @@
 import { Router, Request, Response } from "express";
 import { body } from "express-validator";
+import { basicAuthHeaderBase64 } from "../consts/basicAuthHeaderBase64";
 import { inputValidationMiddleware } from "../middlewares/input-validation-middleware";
 import {
   bloggersRepository,
@@ -33,7 +34,7 @@ const validations = [
   generateValidation("bloggerId", "Blogger ID"),
 ];
 
-const getInfoAboutBlogger = (bloggerId: string, bloggers: BloggerType[]) => {
+const getInfoAboutBlogger = (bloggerId: number, bloggers: BloggerType[]) => {
   const isBloggerExist =
     bloggers.findIndex((item: BloggerType) => item.id === bloggerId) > -1;
   const indexOfBlogger = bloggers.findIndex(
@@ -55,7 +56,8 @@ postsRouter.post(
     const bloggers = bloggersRepository.findBloggers();
     const bloggerInfo = getInfoAboutBlogger(req.body.bloggerId, bloggers);
     const { isBloggerExist, indexOfBlogger } = bloggerInfo;
-    const isAuthorized = req.get("Authorization");
+    const authHeader = req.headers.authorization;
+    const isAuthorized = authHeader === basicAuthHeaderBase64;
 
     if (!isAuthorized) {
       res.status(401).send({
@@ -87,7 +89,7 @@ postsRouter.post(
           title: req.body.title,
           shortDescription: req.body.shortDescription,
           content: req.body.content,
-          bloggerId: req.body.bloggerId,
+          bloggerId: +req.body.bloggerId,
           bloggerName: bloggers[indexOfBlogger].name,
         };
         const newPost = postsRepository.createPosts(data);
@@ -98,7 +100,7 @@ postsRouter.post(
 );
 
 postsRouter.get("/:postId", (req: Request, res: Response) => {
-  const id = req.params.postId;
+  const id = +req.params.postId;
   const post = postsRepository.getPostById(id);
   const posts = postsRepository.findPosts();
 
@@ -116,11 +118,12 @@ postsRouter.put(
   ...validations,
   inputValidationMiddleware,
   (req: Request, res: Response) => {
-    const id = req.params.id;
+    const id = +req.params.id;
     const bloggers = bloggersRepository.findBloggers();
     const bloggerInfo = getInfoAboutBlogger(req.body.bloggerId, bloggers);
     const { isBloggerExist, indexOfBlogger } = bloggerInfo;
-    const isAuthorized = req.get("Authorization");
+    const authHeader = req.headers.authorization;
+    const isAuthorized = authHeader === basicAuthHeaderBase64;
 
     if (!isAuthorized) {
       res.status(401).send({
@@ -167,11 +170,12 @@ postsRouter.put(
 );
 
 postsRouter.delete("/:id", (req: Request, res: Response) => {
-  const id = req.params.id;
+  const id = +req.params.id;
 
   const posts = postsRepository.findPosts();
   const isPostExist = posts.find((item: PostType) => item.id === id);
-  const isAuthorized = req.get("Authorization");
+  const authHeader = req.headers.authorization;
+  const isAuthorized = authHeader === basicAuthHeaderBase64;
 
   if (!isAuthorized) {
     res.status(401).send({
