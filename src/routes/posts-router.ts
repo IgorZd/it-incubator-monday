@@ -36,7 +36,7 @@ postsRouter.post(
   ...validations,
   authMiddleware,
   inputValidationMiddleware,
-  isIdExistMiddleware(bloggers, "bloggerId"),
+  // isIdExistMiddleware(bloggers, "bloggerId"),
   (req: Request, res: Response) => {
     const blogger = bloggersRepository.getBloggerById(+req.body.bloggerId);
 
@@ -74,7 +74,7 @@ postsRouter.put(
   ...validations,
   authMiddleware,
   inputValidationMiddleware,
-  isIdExistMiddleware(bloggers, "bloggerId"),
+  // isIdExistMiddleware(bloggers, "bloggerId"),
   (req: Request, res: Response) => {
     const id = +req.params.id;
     const title: string = req.body.title;

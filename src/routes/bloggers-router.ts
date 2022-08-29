@@ -53,7 +53,7 @@ bloggersRouter.put(
   youtubeUrlValidation,
   inputValidationMiddleware,
   authMiddleware,
-  isIdExistMiddleware(bloggers),
+  // isIdExistMiddleware(bloggers),
   (req: Request, res: Response) => {
     const id = +req.params.id;
     const name = req.body.name;
