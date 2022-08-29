@@ -2,7 +2,7 @@ import { body } from "express-validator";
 
 export const nameValidation = body("name")
   .not()
-  .exists()
+  .optional()
   .withMessage("Name doesn't exist")
   .exists()
   .withMessage("Name is empty")
