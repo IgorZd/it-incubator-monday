@@ -20,12 +20,11 @@ export const contentValidation = body("content")
 export const bloggerIdValidation = body("bloggerId")
   .trim()
   .isInt()
-  .withMessage("BloggerId should be Integer");
-
-// .custom(async (value: number) => {
-//   const blogger = bloggersRepository.getBloggerById(value);
-//   if (!blogger) {
-//     throw new Error("BloggerId doesn't exist");
-//   }
-//   return true;
-// });
+  .withMessage("BloggerId should be Integer")
+  .custom(async (value: number) => {
+    const blogger = bloggersRepository.getBloggerById(value);
+    if (!blogger) {
+      throw new Error("BloggerId doesn't exist");
+    }
+    return true;
+  });
