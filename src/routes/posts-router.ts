@@ -14,7 +14,7 @@ import {
 export const postsRouter = Router({});
 
 const validations = [
-  bloggerIdValidation,
+  // bloggerIdValidation,
   titleValidation,
   shortDescriptionValidation,
   contentValidation,
