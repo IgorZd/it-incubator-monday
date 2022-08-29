@@ -1,9 +1,6 @@
 import { body } from "express-validator";
 
 export const nameValidation = body("name")
-  // .not()
-  // .optional()
-  // .withMessage("Name doesn't exist")
   .exists()
   .withMessage("Name is empty")
   .trim()
