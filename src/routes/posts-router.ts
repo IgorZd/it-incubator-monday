@@ -14,10 +14,10 @@ import {
 export const postsRouter = Router({});
 
 const validations = [
+  bloggerIdValidation,
   titleValidation,
   shortDescriptionValidation,
   contentValidation,
-  bloggerIdValidation,
 ];
 
 postsRouter.get("/", (req: Request, res: Response) => {
@@ -27,9 +27,9 @@ postsRouter.get("/", (req: Request, res: Response) => {
 
 postsRouter.post(
   "/",
-  ...validations,
   authMiddleware,
   inputValidationMiddleware,
+  ...validations,
   (req: Request, res: Response) => {
     const blogger = bloggersRepository.getBloggerById(+req.body.bloggerId);
 
@@ -49,7 +49,8 @@ postsRouter.post(
 
 postsRouter.get(
   "/:postId",
-  // isPostIdExistMiddleware,
+  inputValidationMiddleware,
+  isPostIdExistMiddleware,
   (req: Request, res: Response) => {
     const id = +req.params.postId;
     const post = postsRepository.getPostById(id);
@@ -67,7 +68,7 @@ postsRouter.put(
   ...validations,
   authMiddleware,
   inputValidationMiddleware,
-  // isPostIdExistMiddleware,
+  isPostIdExistMiddleware,
   (req: Request, res: Response) => {
     const id = +req.params.postId;
     const title: string = req.body.title;
@@ -100,7 +101,8 @@ postsRouter.put(
 postsRouter.delete(
   "/:postId",
   authMiddleware,
-  // isPostIdExistMiddleware,
+  inputValidationMiddleware,
+  isPostIdExistMiddleware,
   (req: Request, res: Response) => {
     const id = +req.params.id;
     const isPostDeleted = postsRepository.deletePost(id);
