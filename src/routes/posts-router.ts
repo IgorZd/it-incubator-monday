@@ -49,7 +49,7 @@ postsRouter.post(
 
 postsRouter.get(
   "/:postId",
-  isPostIdExistMiddleware,
+  // isPostIdExistMiddleware,
   (req: Request, res: Response) => {
     const id = +req.params.postId;
     const post = postsRepository.getPostById(id);
@@ -67,7 +67,7 @@ postsRouter.put(
   ...validations,
   authMiddleware,
   inputValidationMiddleware,
-  isPostIdExistMiddleware,
+  // isPostIdExistMiddleware,
   (req: Request, res: Response) => {
     const id = +req.params.postId;
     const title: string = req.body.title;
@@ -100,7 +100,7 @@ postsRouter.put(
 postsRouter.delete(
   "/:postId",
   authMiddleware,
-  isPostIdExistMiddleware,
+  // isPostIdExistMiddleware,
   (req: Request, res: Response) => {
     const id = +req.params.id;
     const isPostDeleted = postsRepository.deletePost(id);

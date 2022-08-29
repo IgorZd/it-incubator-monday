@@ -34,7 +34,7 @@ bloggersRouter.post(
 
 bloggersRouter.get(
   "/:bloggerId",
-  isBloggerIdExistMiddleware,
+  // isBloggerIdExistMiddleware,
   (req: Request, res: Response) => {
     const id = +req.params.bloggerId;
     const blogger = bloggersRepository.getBloggerById(id);
@@ -50,7 +50,7 @@ bloggersRouter.get(
 bloggersRouter.put(
   "/:bloggerId",
   authMiddleware,
-  isBloggerIdExistMiddleware,
+  // isBloggerIdExistMiddleware,
   nameValidation,
   youtubeUrlValidation,
   inputValidationMiddleware,
@@ -71,7 +71,7 @@ bloggersRouter.put(
 bloggersRouter.delete(
   "/:bloggerId",
   authMiddleware,
-  isBloggerIdExistMiddleware,
+  // isBloggerIdExistMiddleware,
   (req: Request, res: Response) => {
     const id = +req.params.bloggerId;
     const isVideoDeleted = bloggersRepository.deleteBlogger(id);
