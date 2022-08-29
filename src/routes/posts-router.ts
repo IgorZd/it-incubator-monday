@@ -14,7 +14,6 @@ import {
 export const postsRouter = Router({});
 
 const validations = [
-  // bloggerIdValidation,
   titleValidation,
   shortDescriptionValidation,
   contentValidation,
@@ -49,8 +48,8 @@ postsRouter.post(
 
 postsRouter.get(
   "/:postId",
-  inputValidationMiddleware,
   isPostIdExistMiddleware,
+  inputValidationMiddleware,
   (req: Request, res: Response) => {
     const id = +req.params.postId;
     const post = postsRepository.getPostById(id);
@@ -65,10 +64,11 @@ postsRouter.get(
 
 postsRouter.put(
   "/:postId",
-  ...validations,
   authMiddleware,
-  inputValidationMiddleware,
   isPostIdExistMiddleware,
+  inputValidationMiddleware,
+  bloggerIdValidation,
+  ...validations,
   (req: Request, res: Response) => {
     const id = +req.params.postId;
     const title: string = req.body.title;
@@ -101,8 +101,8 @@ postsRouter.put(
 postsRouter.delete(
   "/:postId",
   authMiddleware,
-  inputValidationMiddleware,
-  // isPostIdExistMiddleware,
+  isPostIdExistMiddleware,
+  // inputValidationMiddleware,
   (req: Request, res: Response) => {
     const id = +req.params.id;
     const isPostDeleted = postsRepository.deletePost(id);
