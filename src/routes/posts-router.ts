@@ -104,7 +104,7 @@ postsRouter.delete(
   isPostIdExistMiddleware,
   // inputValidationMiddleware,
   (req: Request, res: Response) => {
-    const id = +req.params.id;
+    const id = +req.params.postId;
     const isPostDeleted = postsRepository.deletePost(id);
 
     if (!isPostDeleted) {
