@@ -4,7 +4,7 @@ export interface BloggerType {
   youtubeUrl: string;
 }
 
-const bloggers = [
+let bloggers = [
   { id: 1, name: "MINSKI", youtubeUrl: "https://www.youtube.com/c/VRYBY" },
   {
     id: 2,
@@ -40,10 +40,12 @@ export const bloggersRepository = {
     const blogger = bloggers.find((item: BloggerType) => item.id === id);
     return blogger;
   },
-  updateBlogger(id: number) {
+  updateBlogger(id: number, name: string, youtubeUrl: string) {
     const blogger = bloggers.find((item: BloggerType) => item.id === id);
     if (blogger) {
-      return true;
+      blogger.name = name;
+      blogger.youtubeUrl = youtubeUrl;
+      return blogger;
     } else {
       false;
     }
@@ -58,7 +60,7 @@ export const bloggersRepository = {
     return false;
   },
   removeAllData() {
-    bloggers.splice(0, bloggers.length);
+    bloggers = [];
     if (bloggers.length === 0) {
       return true;
     } else false;

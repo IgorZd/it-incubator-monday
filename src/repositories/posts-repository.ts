@@ -7,7 +7,7 @@ export interface PostType {
   bloggerName: string;
 }
 
-const posts = [
+let posts = [
   {
     id: 1,
     title: "Title 1",
@@ -69,10 +69,26 @@ export const postsRepository = {
     posts.push(newPost);
     return newPost;
   },
-  updatePost(id: number) {
+  updatePost(
+    id: number,
+    data: {
+      title: string;
+      shortDescription: string;
+      content: string;
+      bloggerId: number;
+      bloggerName: string;
+    }
+  ) {
+    const { title, shortDescription, content, bloggerId, bloggerName } = data;
+
     const post = posts.find((item: PostType) => item.id === id);
     if (post) {
-      return true;
+      post.title = title;
+      post.shortDescription = shortDescription;
+      post.content = content;
+      post.bloggerId = bloggerId;
+      post.bloggerName = bloggerName;
+      return post;
     } else {
       false;
     }
@@ -88,7 +104,7 @@ export const postsRepository = {
     return false;
   },
   removeAllData() {
-    posts.splice(0, posts.length);
+    posts = [];
     if (posts.length === 0) {
       return true;
     } else false;

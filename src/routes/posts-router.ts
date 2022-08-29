@@ -1,37 +1,29 @@
 import { Router, Request, Response } from "express";
-import { body } from "express-validator";
-import { basicAuthHeaderBase64 } from "../consts/basicAuthHeaderBase64";
+import { authMiddleware } from "../middlewares/auth-middleware";
 import { inputValidationMiddleware } from "../middlewares/input-validation-middleware";
+import { isIdExistMiddleware } from "../middlewares/isIdExist-middleware";
 import {
   bloggersRepository,
   BloggerType,
 } from "../repositories/bloggers-repository";
-import { postsRepository, PostType } from "../repositories/posts-repository";
-import { isIdExist } from "../repositories/videos-repository";
+import { postsRepository } from "../repositories/posts-repository";
+import {
+  bloggerIdValidation,
+  contentValidation,
+  shortDescriptionValidation,
+  titleValidation,
+} from "../validations/posts-validation";
 
 export const postsRouter = Router({});
-const generateValidation = (fieldName: string, name: string) => {
-  return body(`${fieldName}`)
-    .trim()
-    .isLength(
-      fieldName === "title"
-        ? { min: 1, max: 30 }
-        : fieldName === "shortDescription"
-        ? { min: 1, max: 100 }
-        : fieldName === "content"
-        ? { min: 1, max: 1000 }
-        : { min: 1 }
-    )
-    .withMessage(`${name} should be a string with length more than 1 symbol`)
-    .isString()
-    .withMessage(`${name} should be a string with length more than 1 symbol`);
-};
+
+const bloggers = bloggersRepository.findBloggers();
+const posts = postsRepository.findPosts();
 
 const validations = [
-  generateValidation("title", "Title"),
-  generateValidation("shortDescription", "Short description"),
-  generateValidation("content", "Content"),
-  generateValidation("bloggerId", "Blogger ID"),
+  titleValidation,
+  shortDescriptionValidation,
+  contentValidation,
+  bloggerIdValidation,
 ];
 
 const getInfoAboutBlogger = (bloggerId: number, bloggers: BloggerType[]) => {
@@ -51,154 +43,88 @@ postsRouter.get("/", (req: Request, res: Response) => {
 postsRouter.post(
   "/",
   ...validations,
+  authMiddleware,
   inputValidationMiddleware,
+  isIdExistMiddleware(bloggers, "bloggerId"),
   (req: Request, res: Response) => {
-    const bloggers = bloggersRepository.findBloggers();
-    const bloggerInfo = getInfoAboutBlogger(req.body.bloggerId, bloggers);
-    const { isBloggerExist, indexOfBlogger } = bloggerInfo;
-    const authHeader = req.headers.authorization;
-    const isAuthorized = authHeader === basicAuthHeaderBase64;
+    const blogger = bloggersRepository.getBloggerById(+req.body.bloggerId);
 
-    if (!isAuthorized) {
-      res.status(401).send({
-        errorsMessages: [
-          {
-            message: "Not authorized",
-            field: "Authorization",
-          },
-        ],
-      });
-      return;
-    }
-
-    if (!isBloggerExist) {
-      res.status(400).send({
-        errorsMessages: [
-          {
-            message: "bloggerId doesn't exist",
-            field: "bloggerId",
-          },
-        ],
-      });
-      return;
-    }
-
-    if (isAuthorized) {
-      if (isBloggerExist) {
-        const data = {
-          title: req.body.title,
-          shortDescription: req.body.shortDescription,
-          content: req.body.content,
-          bloggerId: +req.body.bloggerId,
-          bloggerName: bloggers[indexOfBlogger].name,
-        };
-        const newPost = postsRepository.createPosts(data);
-        res.status(201).send(newPost);
-      }
+    if (blogger) {
+      const data = {
+        title: req.body.title,
+        shortDescription: req.body.shortDescription,
+        content: req.body.content,
+        bloggerId: +req.body.bloggerId,
+        bloggerName: blogger.name,
+      };
+      const newPost = postsRepository.createPosts(data);
+      res.status(201).send(newPost);
     }
   }
 );
 
-postsRouter.get("/:postId", (req: Request, res: Response) => {
-  const id = +req.params.postId;
-  const post = postsRepository.getPostById(id);
-  const posts = postsRepository.findPosts();
+postsRouter.get(
+  "/:id",
+  isIdExistMiddleware(posts),
+  (req: Request, res: Response) => {
+    const id = +req.params.d;
+    const post = postsRepository.getPostById(id);
 
-  if (!isIdExist(id, posts)) {
-    res.sendStatus(404);
-  } else if (post) {
-    res.status(200).send(post);
-  } else {
-    res.sendStatus(404);
+    if (post) {
+      res.status(200).send(post);
+    } else {
+      res.sendStatus(404);
+    }
   }
-});
+);
 
 postsRouter.put(
   "/:id",
   ...validations,
+  authMiddleware,
   inputValidationMiddleware,
+  isIdExistMiddleware(bloggers, "bloggerId"),
   (req: Request, res: Response) => {
     const id = +req.params.id;
-    const bloggers = bloggersRepository.findBloggers();
-    const bloggerInfo = getInfoAboutBlogger(req.body.bloggerId, bloggers);
-    const { isBloggerExist, indexOfBlogger } = bloggerInfo;
-    const authHeader = req.headers.authorization;
-    const isAuthorized = authHeader === basicAuthHeaderBase64;
+    const title: string = req.body.title;
+    const shortDescription: string = req.body.shortDescription;
+    const content: string = req.body.content;
+    const bloggerId = +req.body.bloggerId;
+    const blogger = bloggersRepository.getBloggerById(+req.body.bloggerId);
 
-    if (!isAuthorized) {
-      res.status(401).send({
-        errorsMessages: [
-          {
-            message: "Not authorized",
-            field: "Authorization",
-          },
-        ],
-      });
-      return;
-    }
+    if (blogger) {
+      const data = {
+        title,
+        shortDescription,
+        content,
+        bloggerId,
+        bloggerName: blogger.name,
+      };
+      const post = postsRepository.updatePost(id, data);
 
-    if (!isBloggerExist) {
-      res.status(400).send({
-        errorsMessages: [
-          {
-            message: "bloggerId doesn't exist",
-            field: "bloggerId",
-          },
-        ],
-      });
-      return;
-    }
-
-    if (isAuthorized) {
-      const isPostUpdated = postsRepository.updatePost(id);
-
-      if (isPostUpdated) {
-        const post = postsRepository.getPostById(id);
-        if (post) {
-          post.title = req.body.title;
-          post.shortDescription = req.body.shortDescription;
-          post.content = req.body.content;
-          post.bloggerId = req.body.bloggerId;
-          post.bloggerName = bloggers[indexOfBlogger].name;
-          res.status(204).send(post);
-        }
+      if (post) {
+        res.status(204).send(post);
       } else {
         res.sendStatus(404);
       }
+    } else {
+      res.sendStatus(404);
     }
   }
 );
 
-postsRouter.delete("/:id", (req: Request, res: Response) => {
-  const id = +req.params.id;
-
-  const posts = postsRepository.findPosts();
-  const isPostExist = posts.find((item: PostType) => item.id === id);
-  const authHeader = req.headers.authorization;
-  const isAuthorized = authHeader === basicAuthHeaderBase64;
-
-  if (!isAuthorized) {
-    res.status(401).send({
-      errorsMessages: [
-        {
-          message: "Not authorized",
-          field: "Authorization",
-        },
-      ],
-    });
-    return;
-  }
-
-  if (!isPostExist) {
-    res.sendStatus(404);
-    return;
-  }
-  if (isAuthorized) {
+postsRouter.delete(
+  "/:id",
+  authMiddleware,
+  isIdExistMiddleware(posts),
+  (req: Request, res: Response) => {
+    const id = +req.params.id;
     const isPostDeleted = postsRepository.deletePost(id);
+
     if (!isPostDeleted) {
       res.sendStatus(404);
       return;
     }
     res.sendStatus(204);
   }
-});
+);

@@ -1,0 +1,14 @@
+import { body } from "express-validator";
+export const nameValidation = body("name")
+  .trim()
+  .isLength({ min: 1, max: 15 })
+  .withMessage("Name should consist from 1 to 15 symbols");
+
+export const youtubeUrlValidation = body("youtubeUrl")
+  .trim()
+  .isLength({ min: 1, max: 100 })
+  .withMessage("YoutubeUrl should consist from 1 to 100 symbols")
+  .matches(
+    /^https:\/\/([a-zA-Z0-9_-]+\.)+[a-zA-Z0-9_-]+(\/[a-zA-Z0-9_-]+)*\/?$/
+  )
+  .withMessage("Incorrect format of url");
