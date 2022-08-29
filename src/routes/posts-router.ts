@@ -28,7 +28,6 @@ postsRouter.post(
   "/",
   authMiddleware,
   ...validations,
-  bloggerIdValidation,
   inputValidationMiddleware,
   (req: Request, res: Response) => {
     const blogger = bloggersRepository.getBloggerById(+req.body.bloggerId);
