@@ -27,8 +27,8 @@ postsRouter.get("/", (req: Request, res: Response) => {
 postsRouter.post(
   "/",
   authMiddleware,
-  inputValidationMiddleware,
   ...validations,
+  inputValidationMiddleware,
   (req: Request, res: Response) => {
     const blogger = bloggersRepository.getBloggerById(+req.body.bloggerId);
 
@@ -66,9 +66,9 @@ postsRouter.put(
   "/:postId",
   authMiddleware,
   isPostIdExistMiddleware,
-  inputValidationMiddleware,
-  bloggerIdValidation,
   ...validations,
+  bloggerIdValidation,
+  inputValidationMiddleware,
   (req: Request, res: Response) => {
     const id = +req.params.postId;
     const title: string = req.body.title;
@@ -102,7 +102,6 @@ postsRouter.delete(
   "/:postId",
   authMiddleware,
   isPostIdExistMiddleware,
-  // inputValidationMiddleware,
   (req: Request, res: Response) => {
     const id = +req.params.postId;
     const isPostDeleted = postsRepository.deletePost(id);

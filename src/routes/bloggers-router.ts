@@ -20,9 +20,9 @@ bloggersRouter.get("/", (req: Request, res: Response) => {
 bloggersRouter.post(
   "/",
   authMiddleware,
-  inputValidationMiddleware,
   nameValidation,
   youtubeUrlValidation,
+  inputValidationMiddleware,
   (req: Request, res: Response) => {
     const name: string = req.body.name;
     const youtubeUrl: string = req.body.youtubeUrl;
@@ -34,7 +34,6 @@ bloggersRouter.post(
 
 bloggersRouter.get(
   "/:bloggerId",
-  inputValidationMiddleware,
   isBloggerIdExistMiddleware,
   (req: Request, res: Response) => {
     const id = +req.params.bloggerId;
@@ -51,10 +50,10 @@ bloggersRouter.get(
 bloggersRouter.put(
   "/:bloggerId",
   authMiddleware,
-  inputValidationMiddleware,
   isBloggerIdExistMiddleware,
   nameValidation,
   youtubeUrlValidation,
+  inputValidationMiddleware,
   (req: Request, res: Response) => {
     const id = +req.params.bloggerId;
     const name = req.body.name;
@@ -72,7 +71,6 @@ bloggersRouter.put(
 bloggersRouter.delete(
   "/:bloggerId",
   authMiddleware,
-  inputValidationMiddleware,
   isBloggerIdExistMiddleware,
   (req: Request, res: Response) => {
     const id = +req.params.bloggerId;
