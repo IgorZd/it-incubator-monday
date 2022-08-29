@@ -24,8 +24,8 @@ bloggersRouter.post(
   nameValidation,
   youtubeUrlValidation,
   (req: Request, res: Response) => {
-    const name = req.body.name;
-    const youtubeUrl = req.body.youtubeUrl;
+    const name: string = req.body.name;
+    const youtubeUrl: string = req.body.youtubeUrl;
     const newBlogger = bloggersRepository.createBlogger(name, youtubeUrl);
 
     res.status(201).send(newBlogger);
