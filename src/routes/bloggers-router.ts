@@ -34,7 +34,7 @@ bloggersRouter.post(
 
 bloggersRouter.get(
   "/:id",
-  isIdExistMiddleware(bloggers),
+  // isIdExistMiddleware(bloggers),
   (req: Request, res: Response) => {
     const id = +req.params.id;
     const blogger = bloggersRepository.getBloggerById(id);

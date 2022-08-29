@@ -26,15 +26,6 @@ const validations = [
   bloggerIdValidation,
 ];
 
-const getInfoAboutBlogger = (bloggerId: number, bloggers: BloggerType[]) => {
-  const isBloggerExist =
-    bloggers.findIndex((item: BloggerType) => item.id === bloggerId) > -1;
-  const indexOfBlogger = bloggers.findIndex(
-    (item: BloggerType) => item.id === bloggerId
-  );
-  return { isBloggerExist, indexOfBlogger };
-};
-
 postsRouter.get("/", (req: Request, res: Response) => {
   const videos = postsRepository.findPosts();
   res.status(200).send(videos);
@@ -65,7 +56,7 @@ postsRouter.post(
 
 postsRouter.get(
   "/:id",
-  isIdExistMiddleware(posts),
+  // isIdExistMiddleware(posts),
   (req: Request, res: Response) => {
     const id = +req.params.d;
     const post = postsRepository.getPostById(id);
@@ -116,7 +107,7 @@ postsRouter.put(
 postsRouter.delete(
   "/:id",
   authMiddleware,
-  isIdExistMiddleware(posts),
+  // isIdExistMiddleware(posts),
   (req: Request, res: Response) => {
     const id = +req.params.id;
     const isPostDeleted = postsRepository.deletePost(id);
