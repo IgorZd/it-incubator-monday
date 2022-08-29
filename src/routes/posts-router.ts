@@ -28,6 +28,7 @@ postsRouter.post(
   "/",
   authMiddleware,
   ...validations,
+  bloggerIdValidation,
   inputValidationMiddleware,
   (req: Request, res: Response) => {
     const blogger = bloggersRepository.getBloggerById(+req.body.bloggerId);
@@ -66,8 +67,8 @@ postsRouter.put(
   "/:postId",
   authMiddleware,
   isPostIdExistMiddleware,
-  bloggerIdValidation,
   ...validations,
+  bloggerIdValidation,
   inputValidationMiddleware,
   (req: Request, res: Response) => {
     const id = +req.params.postId;
