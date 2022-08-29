@@ -1,6 +1,8 @@
 import { body } from "express-validator";
 
 export const nameValidation = body("name")
+  .exists()
+  .withMessage("Name is empty")
   .trim()
   .isLength({ min: 1, max: 15 })
   .withMessage("Name should consist from 1 to 15 symbols");
