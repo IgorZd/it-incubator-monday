@@ -14,6 +14,7 @@ import {
 export const postsRouter = Router({});
 
 const validations = [
+  bloggerIdValidation,
   titleValidation,
   shortDescriptionValidation,
   contentValidation,
@@ -67,7 +68,6 @@ postsRouter.put(
   authMiddleware,
   isPostIdExistMiddleware,
   ...validations,
-  bloggerIdValidation,
   inputValidationMiddleware,
   (req: Request, res: Response) => {
     const id = +req.params.postId;
