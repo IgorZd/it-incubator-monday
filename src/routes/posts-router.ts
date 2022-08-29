@@ -1,11 +1,8 @@
 import { Router, Request, Response } from "express";
 import { authMiddleware } from "../middlewares/auth-middleware";
 import { inputValidationMiddleware } from "../middlewares/input-validation-middleware";
-import { isIdExistMiddleware } from "../middlewares/isIdExist-middleware";
-import {
-  bloggersRepository,
-  BloggerType,
-} from "../repositories/bloggers-repository";
+import { isPostIdExistMiddleware } from "../middlewares/isIdExist-middleware";
+import { bloggersRepository } from "../repositories/bloggers-repository";
 import { postsRepository } from "../repositories/posts-repository";
 import {
   bloggerIdValidation,
@@ -15,9 +12,6 @@ import {
 } from "../validations/posts-validation";
 
 export const postsRouter = Router({});
-
-const bloggers = bloggersRepository.findBloggers();
-const posts = postsRepository.findPosts();
 
 const validations = [
   titleValidation,
@@ -36,7 +30,6 @@ postsRouter.post(
   ...validations,
   authMiddleware,
   inputValidationMiddleware,
-  // isIdExistMiddleware(bloggers, "bloggerId"),
   (req: Request, res: Response) => {
     const blogger = bloggersRepository.getBloggerById(+req.body.bloggerId);
 
@@ -55,10 +48,10 @@ postsRouter.post(
 );
 
 postsRouter.get(
-  "/:id",
-  // isIdExistMiddleware(posts),
+  "/:postId",
+  isPostIdExistMiddleware,
   (req: Request, res: Response) => {
-    const id = +req.params.d;
+    const id = +req.params.postId;
     const post = postsRepository.getPostById(id);
 
     if (post) {
@@ -70,13 +63,13 @@ postsRouter.get(
 );
 
 postsRouter.put(
-  "/:id",
+  "/:postId",
   ...validations,
   authMiddleware,
   inputValidationMiddleware,
-  // isIdExistMiddleware(bloggers, "bloggerId"),
+  isPostIdExistMiddleware,
   (req: Request, res: Response) => {
-    const id = +req.params.id;
+    const id = +req.params.postId;
     const title: string = req.body.title;
     const shortDescription: string = req.body.shortDescription;
     const content: string = req.body.content;
@@ -105,9 +98,9 @@ postsRouter.put(
 );
 
 postsRouter.delete(
-  "/:id",
+  "/:postId",
   authMiddleware,
-  // isIdExistMiddleware(posts),
+  isPostIdExistMiddleware,
   (req: Request, res: Response) => {
     const id = +req.params.id;
     const isPostDeleted = postsRepository.deletePost(id);

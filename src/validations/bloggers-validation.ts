@@ -1,4 +1,5 @@
 import { body } from "express-validator";
+
 export const nameValidation = body("name")
   .trim()
   .isLength({ min: 1, max: 15 })

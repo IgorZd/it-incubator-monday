@@ -1,6 +1,6 @@
 import { Router, Request, Response } from "express";
 import { authMiddleware } from "../middlewares/auth-middleware";
-import { isIdExistMiddleware } from "../middlewares/isIdExist-middleware";
+import { isBloggerIdExistMiddleware } from "../middlewares/isIdExist-middleware";
 import { inputValidationMiddleware } from "../middlewares/input-validation-middleware";
 import { bloggersRepository } from "../repositories/bloggers-repository";
 
@@ -19,10 +19,10 @@ bloggersRouter.get("/", (req: Request, res: Response) => {
 
 bloggersRouter.post(
   "/",
+  authMiddleware,
   nameValidation,
   youtubeUrlValidation,
   inputValidationMiddleware,
-  authMiddleware,
   (req: Request, res: Response) => {
     const name = req.body.name;
     const youtubeUrl = req.body.youtubeUrl;
@@ -33,10 +33,10 @@ bloggersRouter.post(
 );
 
 bloggersRouter.get(
-  "/:id",
-  // isIdExistMiddleware(bloggers),
+  "/:bloggerId",
+  isBloggerIdExistMiddleware,
   (req: Request, res: Response) => {
-    const id = +req.params.id;
+    const id = +req.params.bloggerId;
     const blogger = bloggersRepository.getBloggerById(id);
 
     if (blogger) {
@@ -48,14 +48,14 @@ bloggersRouter.get(
 );
 
 bloggersRouter.put(
-  "/:id",
+  "/:bloggerId",
+  authMiddleware,
+  isBloggerIdExistMiddleware,
   nameValidation,
   youtubeUrlValidation,
   inputValidationMiddleware,
-  authMiddleware,
-  // isIdExistMiddleware(bloggers),
   (req: Request, res: Response) => {
-    const id = +req.params.id;
+    const id = +req.params.bloggerId;
     const name = req.body.name;
     const youtubeUrl = req.body.youtubeUrl;
     const blogger = bloggersRepository.updateBlogger(id, name, youtubeUrl);
@@ -68,13 +68,18 @@ bloggersRouter.put(
   }
 );
 
-bloggersRouter.delete("/:id", authMiddleware, (req: Request, res: Response) => {
-  const id = +req.params.id;
-  const isVideoDeleted = bloggersRepository.deleteBlogger(id);
+bloggersRouter.delete(
+  "/:bloggerId",
+  authMiddleware,
+  isBloggerIdExistMiddleware,
+  (req: Request, res: Response) => {
+    const id = +req.params.bloggerId;
+    const isVideoDeleted = bloggersRepository.deleteBlogger(id);
 
-  if (isVideoDeleted) {
-    res.sendStatus(204);
-  } else {
-    res.sendStatus(404);
+    if (isVideoDeleted) {
+      res.sendStatus(204);
+    } else {
+      res.sendStatus(404);
+    }
   }
-});
+);
