@@ -63,6 +63,16 @@ bloggersRouter.put(
     const youtubeUrl = req.body.youtubeUrl;
     const blogger = bloggersRepository.updateBlogger(id, name, youtubeUrl);
 
+    if (youtubeUrl.length > 100) {
+      res
+        .status(400)
+        .send({
+          errorsMessages: [
+            { message: "Max lenght of youtubeUrl is 100", field: "youtubeUrl" },
+          ],
+        });
+    }
+
     if (blogger) {
       res.status(204).send(blogger);
     } else {

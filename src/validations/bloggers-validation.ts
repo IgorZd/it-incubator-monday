@@ -10,7 +10,7 @@ export const youtubeUrlValidationFormat = body("youtubeUrl")
   // .isLength({ min: 1, max: 100 })
   // .withMessage("YoutubeUrl should consist from 1 to 100 symbols")
   .matches(
-    /^https:\/\/([a-zA-Z0-9_-]+\.)+[a-zA-Z0-9_-]+(\/[a-zA-Z0-9_-]+)*\/{1,100}?$/
+    /^https:\/\/([a-zA-Z0-9_-]+\.)+[a-zA-Z0-9_-]+(\/[a-zA-Z0-9_-]+)*\/?$/
   )
   .withMessage("Incorrect format of url");
 
