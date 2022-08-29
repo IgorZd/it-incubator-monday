@@ -30,6 +30,15 @@ bloggersRouter.post(
     const youtubeUrl: string = req.body.youtubeUrl;
     const newBlogger = bloggersRepository.createBlogger(name, youtubeUrl);
 
+    if (youtubeUrl.length > 100) {
+      res.status(400).send({
+        errorsMessages: [
+          { message: "Max lenght of youtubeUrl is 100", field: "youtubeUrl" },
+        ],
+      });
+      return;
+    }
+
     res.status(201).send(newBlogger);
   }
 );
@@ -64,13 +73,12 @@ bloggersRouter.put(
     const blogger = bloggersRepository.updateBlogger(id, name, youtubeUrl);
 
     if (youtubeUrl.length > 100) {
-      res
-        .status(400)
-        .send({
-          errorsMessages: [
-            { message: "Max lenght of youtubeUrl is 100", field: "youtubeUrl" },
-          ],
-        });
+      res.status(400).send({
+        errorsMessages: [
+          { message: "Max lenght of youtubeUrl is 100", field: "youtubeUrl" },
+        ],
+      });
+      return;
     }
 
     if (blogger) {
