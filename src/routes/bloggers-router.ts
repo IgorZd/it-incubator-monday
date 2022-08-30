@@ -6,8 +6,7 @@ import { bloggersRepository } from "../repositories/bloggers-repository";
 
 import {
   nameValidation,
-  youtubeUrlValidationFormat,
-  // youtubeUrlValidationLength,
+  youtubeUrlValidation,
 } from "../validations/bloggers-validation";
 
 export const bloggersRouter = Router({});
@@ -22,22 +21,21 @@ bloggersRouter.post(
   "/",
   authMiddleware,
   nameValidation,
-  youtubeUrlValidationFormat,
-  // youtubeUrlValidationLength,
+  youtubeUrlValidation,
   inputValidationMiddleware,
   (req: Request, res: Response) => {
     const name: string = req.body.name;
     const youtubeUrl: string = req.body.youtubeUrl;
     const newBlogger = bloggersRepository.createBlogger(name, youtubeUrl);
 
-    if (youtubeUrl.length > 100) {
-      res.status(400).send({
-        errorsMessages: [
-          { message: "Max lenght of youtubeUrl is 100", field: "youtubeUrl" },
-        ],
-      });
-      return;
-    }
+    // if (youtubeUrl.length > 100) {
+    //   res.status(400).send({
+    //     errorsMessages: [
+    //       { message: "Max lenght of youtubeUrl is 100", field: "youtubeUrl" },
+    //     ],
+    //   });
+    //   return;
+    // }
 
     res.status(201).send(newBlogger);
   }
@@ -63,8 +61,7 @@ bloggersRouter.put(
   authMiddleware,
   isBloggerIdExistMiddleware,
   nameValidation,
-  youtubeUrlValidationFormat,
-  // youtubeUrlValidationLength,
+  youtubeUrlValidation,
   inputValidationMiddleware,
   (req: Request, res: Response) => {
     const id = +req.params.bloggerId;
@@ -72,14 +69,14 @@ bloggersRouter.put(
     const youtubeUrl = req.body.youtubeUrl;
     const blogger = bloggersRepository.updateBlogger(id, name, youtubeUrl);
 
-    if (youtubeUrl.length > 100) {
-      res.status(400).send({
-        errorsMessages: [
-          { message: "Max lenght of youtubeUrl is 100", field: "youtubeUrl" },
-        ],
-      });
-      return;
-    }
+    // if (youtubeUrl.length > 100) {
+    //   res.status(400).send({
+    //     errorsMessages: [
+    //       { message: "Max lenght of youtubeUrl is 100", field: "youtubeUrl" },
+    //     ],
+    //   });
+    //   return;
+    // }
 
     if (blogger) {
       res.status(204).send(blogger);
