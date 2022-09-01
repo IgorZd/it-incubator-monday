@@ -1,9 +1,10 @@
 import { Router, Request, Response } from "express";
+import { postsService } from "../domain/posts-service";
 import { authMiddleware } from "../middlewares/auth-middleware";
 import { inputValidationMiddleware } from "../middlewares/input-validation-middleware";
 import { isPostIdExistMiddleware } from "../middlewares/isIdExist-middleware";
 import { bloggersRepository } from "../repositories/bloggers-repository";
-import { postsRepository } from "../repositories/posts-repository";
+
 import {
   bloggerIdValidation,
   contentValidation,
@@ -21,7 +22,7 @@ const validations = [
 ];
 
 postsRouter.get("/", (req: Request, res: Response) => {
-  const videos = postsRepository.findPosts();
+  const videos = postsService.findPosts();
   res.status(200).send(videos);
 });
 
@@ -41,7 +42,7 @@ postsRouter.post(
         bloggerId: +req.body.bloggerId,
         bloggerName: blogger.name,
       };
-      const newPost = postsRepository.createPosts(data);
+      const newPost = postsService.createPosts(data);
       res.status(201).send(newPost);
     }
   }
@@ -53,7 +54,7 @@ postsRouter.get(
   inputValidationMiddleware,
   (req: Request, res: Response) => {
     const id = +req.params.postId;
-    const post = postsRepository.getPostById(id);
+    const post = postsService.getPostById(id);
 
     if (post) {
       res.status(200).send(post);
@@ -85,7 +86,7 @@ postsRouter.put(
         bloggerId,
         bloggerName: blogger.name,
       };
-      const post = postsRepository.updatePost(id, data);
+      const post = postsService.updatePost(id, data);
 
       if (post) {
         res.status(204).send(post);
@@ -104,7 +105,7 @@ postsRouter.delete(
   isPostIdExistMiddleware,
   (req: Request, res: Response) => {
     const id = +req.params.postId;
-    const isPostDeleted = postsRepository.deletePost(id);
+    const isPostDeleted = postsService.deletePost(id);
 
     if (!isPostDeleted) {
       res.sendStatus(404);

@@ -1,10 +1,10 @@
 import { Router, Request, Response } from "express";
 import { body } from "express-validator";
+import { videosService } from "../domain/videos-service";
 import { inputValidationMiddleware } from "../middlewares/input-validation-middleware";
 import {
   isIdExist,
   isResolutionValid,
-  videosRepository,
 } from "../repositories/videos-repository";
 
 export const videosRouter = Router({});
@@ -39,14 +39,14 @@ const validation = [
   minAgeRestrictionValidation,
 ];
 videosRouter.get("/", (req: Request, res: Response) => {
-  const videos = videosRepository.findVideos();
+  const videos = videosService.findVideos();
   res.status(200).send(videos);
 });
 
 videosRouter.get("/:videoId", (req: Request, res: Response) => {
   const id = +req.params.videoId;
-  const videos = videosRepository.findVideos();
-  const video = videosRepository.getVideoById(id);
+  const videos = videosService.findVideos();
+  const video = videosService.getVideoById(id);
   if (!isIdExist(id, videos)) {
     res.sendStatus(404);
   } else if (video) {
@@ -72,7 +72,7 @@ videosRouter.post(
       });
       return;
     }
-    const newVideo = videosRepository.createVideo(
+    const newVideo = videosService.createVideo(
       title,
       author,
       availableResolutions
@@ -83,7 +83,7 @@ videosRouter.post(
 
 videosRouter.delete("/:id", (req: Request, res: Response) => {
   const id = +req.params.id;
-  const isVideoDeleted = videosRepository.deleteVideo(id);
+  const isVideoDeleted = videosService.deleteVideo(id);
 
   if (isVideoDeleted) {
     res.sendStatus(204);
@@ -99,8 +99,8 @@ videosRouter.put(
   inputValidationMiddleware,
   (req: Request, res: Response) => {
     const id = +req.params.id;
-    const isVideoUpdated = videosRepository.updateVideo(id);
-    const videos = videosRepository.findVideos();
+    const isVideoUpdated = videosService.updateVideo(id);
+    const videos = videosService.findVideos();
     const title = req.body.title;
     const author = req.body.author;
     const availableResolutions = req.body.availableResolutions;
@@ -111,7 +111,7 @@ videosRouter.put(
     if (!isIdExist(id, videos)) {
       res.sendStatus(404);
     } else if (isVideoUpdated) {
-      const video = videosRepository.getVideoById(id);
+      const video = videosService.getVideoById(id);
       if (video) {
         video.title = title;
         video.author = author;

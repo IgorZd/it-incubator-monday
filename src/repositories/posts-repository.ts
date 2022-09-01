@@ -50,22 +50,7 @@ export const postsRepository = {
     const post = posts.find((item: PostType) => item.id === id);
     return post;
   },
-  createPosts(data: {
-    title: string;
-    shortDescription: string;
-    content: string;
-    bloggerId: number;
-    bloggerName: string;
-  }) {
-    const { title, shortDescription, content, bloggerId, bloggerName } = data;
-    const newPost = {
-      id: +new Date(),
-      title,
-      shortDescription,
-      content,
-      bloggerId,
-      bloggerName,
-    };
+  createPosts(newPost: PostType) {
     posts.push(newPost);
     return newPost;
   },

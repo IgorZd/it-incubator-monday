@@ -29,7 +29,7 @@ export const isResolutionValid = (checkArr: string[]) =>
     )
     .filter((item: string | undefined) => item === undefined).length === 0;
 
-const videos = [
+export const videos: VideosType[] = [
   {
     id: 1,
     title: "About JS - 01",
@@ -95,23 +95,7 @@ export const videosRepository = {
     const video = videos.find((item: VideosType) => item.id === id);
     return video;
   },
-  createVideo(title: string, author: string, availableResolutions?: string[]) {
-    const today = new Date();
-    const newVideo = {
-      id: +new Date(),
-      title,
-      author,
-      canBeDownloaded: false,
-      minAgeRestriction: null,
-      createdAt: `${getRequiredDateFormat(today, "yyyy-MM-DDTHH:mm:ss.SSS")}Z`,
-      publicationDate: `${getRequiredDateFormat(
-        new Date(today.setDate(today.getDate() + 1)),
-        "yyyy-MM-DDTHH:mm:ss.SSS"
-      )}Z`,
-      availableResolutions: availableResolutions
-        ? availableResolutions
-        : ["P144"],
-    };
+  createVideo(newVideo: VideosType) {
     videos.push(newVideo);
     return newVideo;
   },

@@ -27,12 +27,7 @@ export const bloggersRepository = {
   findBloggers() {
     return bloggers;
   },
-  createBlogger(name: string, youtubeUrl: string) {
-    const newBlogger = {
-      id: +new Date(),
-      name,
-      youtubeUrl,
-    };
+  createBlogger(newBlogger: BloggerType) {
     bloggers.push(newBlogger);
     return newBlogger;
   },
