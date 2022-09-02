@@ -7,11 +7,11 @@ export const isBloggerIdExistMiddleware = (
   res: Response,
   next: NextFunction
 ) => {
-  const id = +req.params.bloggerId;
-  if (isNaN(id)) {
-    res.sendStatus(404);
-    return;
-  }
+  const id = req.params.bloggerId;
+  // if (isNaN(id)) {
+  //   res.sendStatus(404);
+  //   return;
+  // }
   const blogger = bloggersRepository.getBloggerById(id);
 
   if (!blogger) {
