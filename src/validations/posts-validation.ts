@@ -21,8 +21,8 @@ export const bloggerIdValidation = body("bloggerId")
   .trim()
   .isInt()
   .withMessage("BloggerId should be Integer")
-  .custom(async (value: number) => {
-    const blogger = bloggersRepository.getBloggerById(+value);
+  .custom(async (value: string) => {
+    const blogger = bloggersRepository.getBloggerById(`${value}`);
     if (!blogger) {
       throw new Error("BloggerId doesn't exist");
     }

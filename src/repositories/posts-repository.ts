@@ -1,44 +1,49 @@
 export interface PostType {
-  id: number;
+  id: string;
   title: string;
   shortDescription: string;
   content: string;
-  bloggerId: number;
+  bloggerId: string;
   bloggerName: string;
+  createdAt: string;
 }
 
 let posts = [
   {
-    id: 1,
+    id: "1",
     title: "Title 1",
     shortDescription: "Short description 1",
     content: "Content 1",
-    bloggerId: 1,
+    bloggerId: "1",
     bloggerName: "Blogger name 1",
+    createdAt: "2022-01-22T08:36:01.564Z",
   },
   {
-    id: 2,
+    id: "2",
     title: "Title 2",
     shortDescription: "Short description 2",
     content: "Content 2",
-    bloggerId: 2,
+    bloggerId: "2",
     bloggerName: "Blogger name 2",
+    createdAt: "2021-07-18T18:56:01.564Z",
   },
   {
-    id: 3,
+    id: "3",
     title: "Title 3",
     shortDescription: "Short description 3",
     content: "Content 3",
-    bloggerId: 3,
+    bloggerId: "3",
     bloggerName: "Blogger name 3",
+    createdAt: "2018-03-02T08:36:01.564Z",
   },
   {
-    id: 4,
+    id: "4",
     title: "Title 4",
     shortDescription: "Short description 4",
     content: "Content 4",
-    bloggerId: 4,
+    bloggerId: "4",
     bloggerName: "Blogger name 4",
+    createdAt: "2020-08-08T08:06:01.564Z",
   },
 ];
 
@@ -46,7 +51,7 @@ export const postsRepository = {
   findPosts() {
     return posts;
   },
-  getPostById(id: number) {
+  getPostById(id: string) {
     const post = posts.find((item: PostType) => item.id === id);
     return post;
   },
@@ -55,12 +60,12 @@ export const postsRepository = {
     return newPost;
   },
   updatePost(
-    id: number,
+    id: string,
     data: {
       title: string;
       shortDescription: string;
       content: string;
-      bloggerId: number;
+      bloggerId: string;
       bloggerName: string;
     }
   ) {
@@ -78,7 +83,7 @@ export const postsRepository = {
       false;
     }
   },
-  deletePost(id: number) {
+  deletePost(id: string) {
     for (let i = 0; i < posts.length; i++) {
       if (posts[i].id === id) {
         posts.splice(i, 1);

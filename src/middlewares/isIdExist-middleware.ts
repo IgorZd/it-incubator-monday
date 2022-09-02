@@ -8,10 +8,10 @@ export const isBloggerIdExistMiddleware = (
   next: NextFunction
 ) => {
   const id = req.params.bloggerId;
-  // if (isNaN(id)) {
-  //   res.sendStatus(404);
-  //   return;
-  // }
+  if (typeof id !== "string") {
+    res.sendStatus(404);
+    return;
+  }
   const blogger = bloggersRepository.getBloggerById(id);
 
   if (!blogger) {
@@ -24,8 +24,8 @@ export const isPostIdExistMiddleware = (
   res: Response,
   next: NextFunction
 ) => {
-  const id = +req.params.postId;
-  if (isNaN(id)) {
+  const id = req.params.postId;
+  if (typeof id !== "string") {
     res.sendStatus(404);
     return;
   }

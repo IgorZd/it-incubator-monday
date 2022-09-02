@@ -32,14 +32,14 @@ postsRouter.post(
   ...validations,
   inputValidationMiddleware,
   (req: Request, res: Response) => {
-    const blogger = bloggersRepository.getBloggerById(+req.body.bloggerId);
+    const blogger = bloggersRepository.getBloggerById(req.body.bloggerId);
 
     if (blogger) {
       const data = {
         title: req.body.title,
         shortDescription: req.body.shortDescription,
         content: req.body.content,
-        bloggerId: +req.body.bloggerId,
+        bloggerId: req.body.bloggerId,
         bloggerName: blogger.name,
       };
       const newPost = postsService.createPosts(data);
@@ -53,7 +53,7 @@ postsRouter.get(
   isPostIdExistMiddleware,
   inputValidationMiddleware,
   (req: Request, res: Response) => {
-    const id = +req.params.postId;
+    const id = req.params.postId;
     const post = postsService.getPostById(id);
 
     if (post) {
@@ -71,12 +71,12 @@ postsRouter.put(
   ...validations,
   inputValidationMiddleware,
   (req: Request, res: Response) => {
-    const id = +req.params.postId;
+    const id = req.params.postId;
     const title: string = req.body.title;
     const shortDescription: string = req.body.shortDescription;
     const content: string = req.body.content;
-    const bloggerId = +req.body.bloggerId;
-    const blogger = bloggersRepository.getBloggerById(+req.body.bloggerId);
+    const bloggerId = req.body.bloggerId;
+    const blogger = bloggersRepository.getBloggerById(req.body.bloggerId);
 
     if (blogger) {
       const data = {
@@ -104,7 +104,7 @@ postsRouter.delete(
   authMiddleware,
   isPostIdExistMiddleware,
   (req: Request, res: Response) => {
-    const id = +req.params.postId;
+    const id = req.params.postId;
     const isPostDeleted = postsService.deletePost(id);
 
     if (!isPostDeleted) {
