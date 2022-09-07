@@ -8,9 +8,10 @@ import { bloggersRouter } from "./routes/bloggers-router";
 import { postsRouter } from "./routes/posts-router";
 import { testingRouter } from "./routes/testing-router";
 import { runDb } from "./repositories/db";
+import { kanbanBoardRouter } from "./kanban/routes/kanban-board-router";
 
 const app = express();
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 3001;
 
 const parserMiddleware = bodyParser({});
 const corsMiddleware = cors();
@@ -28,6 +29,7 @@ app.use("/videos", videosRouter);
 app.use("/bloggers", bloggersRouter);
 app.use("/posts", postsRouter);
 app.use("/testing", testingRouter);
+app.use("/kanbanBoard", kanbanBoardRouter);
 
 const startApp = async () => {
   //@TODO когда начну подключать Mongo, нужно раскомментировать!!!
