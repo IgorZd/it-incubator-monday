@@ -1,4 +1,4 @@
-export interface PostType {
+export type PostType = {
   id: string;
   title: string;
   shortDescription: string;
@@ -6,7 +6,7 @@ export interface PostType {
   bloggerId: string;
   bloggerName: string;
   createdAt: string;
-}
+};
 
 let posts = [
   {

@@ -1,14 +1,19 @@
 import { MongoClient } from "mongodb";
-export type ProductType = {
-  id: string;
-  title: string;
-};
+import { BloggerType } from "./bloggers-repository";
+import { PostType } from "./posts-repository";
+import { ProductType } from "./products-db-repository";
+import { VideosType } from "./videos-repository";
 
-const mongoUri = process.env.mongoURI || "mongodb://0.0.0.0:27017";
+const mongoUri =
+  process.env.mongoURI ||
+  "mongodb+srv://admin:31qyZRfkjkpE5E0h@zdanevich-incubator.sy4sfvr.mongodb.net/test";
 
 const client = new MongoClient(mongoUri);
-const db = client.db("shop");
+const db = client.db("incubator");
 export const productsCollection = db.collection<ProductType>("products");
+export const videosCollection = db.collection<VideosType>("videos");
+export const postsCollection = db.collection<PostType>("posts");
+export const bloggersCollection = db.collection<BloggerType>("bloggers");
 
 export const runDb = async () => {
   try {

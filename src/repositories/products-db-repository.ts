@@ -1,4 +1,8 @@
-import { productsCollection, ProductType } from "./db";
+import { productsCollection } from "./db";
+export type ProductType = {
+  id: string;
+  title: string;
+};
 
 export const productsRepository = {
   async findProducts(title: string | null): Promise<ProductType[]> {
@@ -27,7 +31,7 @@ export const productsRepository = {
       { $set: { title: title } }
     );
 
-    return result.matchedCount === 1;
+    return result.modifiedCount === 1;
   },
   async deleteProduct(id: string): Promise<boolean> {
     const result = await productsCollection.deleteOne({ id: id });

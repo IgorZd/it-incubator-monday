@@ -2,10 +2,12 @@ import { Router, Request, Response } from "express";
 import { body } from "express-validator";
 import { videosService } from "../domain/videos-service";
 import { inputValidationMiddleware } from "../middlewares/input-validation-middleware";
+import { VideosType } from "../repositories/videos-db-repository";
 import {
   isIdExist,
   isResolutionValid,
 } from "../repositories/videos-repository";
+import { getRequiredDateFormat } from "../utills/date-format";
 
 export const videosRouter = Router({});
 
@@ -38,15 +40,15 @@ const validation = [
   canBeDownloadedValidation,
   minAgeRestrictionValidation,
 ];
-videosRouter.get("/", (req: Request, res: Response) => {
-  const videos = videosService.findVideos();
+videosRouter.get("/", async (req: Request, res: Response) => {
+  const videos = await videosService.findVideos();
   res.status(200).send(videos);
 });
 
-videosRouter.get("/:videoId", (req: Request, res: Response) => {
+videosRouter.get("/:videoId", async (req: Request, res: Response) => {
   const id = +req.params.videoId;
-  const videos = videosService.findVideos();
-  const video = videosService.getVideoById(id);
+  const videos = await videosService.findVideos();
+  const video = await videosService.getVideoById(id);
   if (!isIdExist(id, videos)) {
     res.sendStatus(404);
   } else if (video) {
@@ -60,10 +62,11 @@ videosRouter.post(
   "/",
   ...validation,
   inputValidationMiddleware,
-  (req: Request, res: Response) => {
+  async (req: Request, res: Response) => {
     const title = req.body.title;
     const author = req.body.author;
     const availableResolutions = req.body.availableResolutions;
+    const minAgeRestriction = req.body.minAgeRestriction;
     if (!isResolutionValid(availableResolutions)) {
       res.status(400).send({
         errorsMessages: [
@@ -72,18 +75,19 @@ videosRouter.post(
       });
       return;
     }
-    const newVideo = videosService.createVideo(
+    const newVideo = await videosService.createVideo(
       title,
       author,
+      minAgeRestriction,
       availableResolutions
     );
     res.status(201).send(newVideo);
   }
 );
 
-videosRouter.delete("/:id", (req: Request, res: Response) => {
+videosRouter.delete("/:id", async (req: Request, res: Response) => {
   const id = +req.params.id;
-  const isVideoDeleted = videosService.deleteVideo(id);
+  const isVideoDeleted = await videosService.deleteVideo(id);
 
   if (isVideoDeleted) {
     res.sendStatus(204);
@@ -97,28 +101,44 @@ videosRouter.put(
   ...validation,
   publicationDateValidation,
   inputValidationMiddleware,
-  (req: Request, res: Response) => {
+  async (req: Request, res: Response) => {
     const id = +req.params.id;
-    const isVideoUpdated = videosService.updateVideo(id);
-    const videos = videosService.findVideos();
-    const title = req.body.title;
-    const author = req.body.author;
-    const availableResolutions = req.body.availableResolutions;
-    const canBeDownloaded = req.body.canBeDownloaded;
-    const minAgeRestriction = req.body.minAgeRestriction;
-    const publicationDate = req.body.publicationDate;
+    const currentDate = new Date();
+
+    const videos = await videosService.findVideos();
+    const title: string = req.body.title;
+    const author: string = req.body.author;
+    const availableResolutions: string[] = req.body.availableResolutions;
+    const canBeDownloaded: boolean = req.body.canBeDownloaded;
+    const minAgeRestriction: null | number = req.body.minAgeRestriction;
+    const publicationDate: string = req.body.publicationDate;
+    const createdAt: string = `${getRequiredDateFormat(
+      currentDate,
+      "yyyy-MM-DDTHH:mm:ss.SSS"
+    )}Z`;
+    const data = {
+      title,
+      author,
+      availableResolutions,
+      canBeDownloaded,
+      minAgeRestriction,
+      publicationDate,
+      createdAt,
+    };
+    const isVideoUpdated: boolean = await videosService.updateVideo(id, data);
 
     if (!isIdExist(id, videos)) {
       res.sendStatus(404);
     } else if (isVideoUpdated) {
-      const video = videosService.getVideoById(id);
+      const video = await videosService.getVideoById(id);
       if (video) {
-        video.title = title;
-        video.author = author;
-        video.availableResolutions = availableResolutions;
-        video.canBeDownloaded = canBeDownloaded;
-        video.minAgeRestriction = minAgeRestriction;
-        video.publicationDate = publicationDate;
+        // video.title = title;
+        // video.author = author;
+        // video.availableResolutions = availableResolutions;
+        // video.canBeDownloaded = canBeDownloaded;
+        // video.minAgeRestriction = minAgeRestriction;
+        // video.publicationDate = publicationDate;
+        videosService.updateVideo;
         res.status(204).send(video);
       }
     } else {

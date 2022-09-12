@@ -1,9 +1,9 @@
-export interface BloggerType {
+export type BloggerType = {
   id: string;
   name: string;
   youtubeUrl: string;
   createdAt: string;
-}
+};
 
 let bloggers = [
   {

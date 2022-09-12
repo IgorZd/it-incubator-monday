@@ -31,7 +31,7 @@ app.use("/testing", testingRouter);
 
 const startApp = async () => {
   //@TODO когда начну подключать Mongo, нужно раскомментировать!!!
-  // await runDb();
+  await runDb();
   app.listen(port, () => {
     console.log(`Example app listening on port ${port}`);
   });

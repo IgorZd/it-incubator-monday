@@ -1,21 +1,26 @@
-import { videosRepository } from "../repositories/videos-repository";
+import { videosRepository } from "../repositories/videos-db-repository";
 import { getRequiredDateFormat } from "../utills/date-format";
 
 export const videosService = {
-  findVideos() {
+  async findVideos() {
     return videosRepository.findVideos();
   },
-  getVideoById(id: number) {
+  async getVideoById(id: number) {
     return videosRepository.getVideoById(id);
   },
-  createVideo(title: string, author: string, availableResolutions?: string[]) {
+  async createVideo(
+    title: string,
+    author: string,
+    minAgeRestriction: number | null,
+    availableResolutions?: string[]
+  ) {
     const today = new Date();
     const newVideo = {
       id: +new Date(),
       title,
       author,
       canBeDownloaded: false,
-      minAgeRestriction: null,
+      minAgeRestriction: minAgeRestriction,
       createdAt: `${getRequiredDateFormat(today, "yyyy-MM-DDTHH:mm:ss.SSS")}Z`,
       publicationDate: `${getRequiredDateFormat(
         new Date(today.setDate(today.getDate() + 1)),
@@ -28,13 +33,24 @@ export const videosService = {
     const createdVideo = videosRepository.createVideo(newVideo);
     return createdVideo;
   },
-  updateVideo(id: number) {
-    return videosRepository.updateVideo(id);
+  async updateVideo(
+    id: number,
+    data: {
+      title: string;
+      author: string;
+      availableResolutions: string[];
+      canBeDownloaded: boolean;
+      minAgeRestriction: number | null;
+      publicationDate: string;
+      createdAt: string;
+    }
+  ) {
+    return videosRepository.updateVideo(id, data);
   },
-  deleteVideo(id: number) {
+  async deleteVideo(id: number) {
     return videosRepository.deleteVideo(id);
   },
-  removeAllData() {
+  async removeAllData() {
     return videosRepository.removeAllData();
   },
 };

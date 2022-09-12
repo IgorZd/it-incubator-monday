@@ -1,5 +1,7 @@
-import { productsCollection, ProductType } from "../repositories/db";
-import { productsRepository } from "../repositories/products-db-repository";
+import {
+  productsRepository,
+  ProductType,
+} from "../repositories/products-db-repository";
 
 export const productsService = {
   async findProducts(title: string | null): Promise<ProductType[]> {
