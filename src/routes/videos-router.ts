@@ -2,11 +2,11 @@ import { Router, Request, Response } from "express";
 import { body } from "express-validator";
 import { videosService } from "../domain/videos-service";
 import { inputValidationMiddleware } from "../middlewares/input-validation-middleware";
-import { VideosType } from "../repositories/videos-db-repository";
 import {
   isIdExist,
   isResolutionValid,
-} from "../repositories/videos-repository";
+} from "../repositories/videos-db-repository";
+
 import { getRequiredDateFormat } from "../utills/date-format";
 
 export const videosRouter = Router({});
@@ -46,7 +46,7 @@ videosRouter.get("/", async (req: Request, res: Response) => {
 });
 
 videosRouter.get("/:videoId", async (req: Request, res: Response) => {
-  const id = +req.params.videoId;
+  const id = req.params.videoId;
   const videos = await videosService.findVideos();
   const video = await videosService.getVideoById(id);
   if (!isIdExist(id, videos)) {
@@ -86,7 +86,7 @@ videosRouter.post(
 );
 
 videosRouter.delete("/:id", async (req: Request, res: Response) => {
-  const id = +req.params.id;
+  const id = req.params.id;
   const isVideoDeleted = await videosService.deleteVideo(id);
 
   if (isVideoDeleted) {
@@ -102,7 +102,7 @@ videosRouter.put(
   publicationDateValidation,
   inputValidationMiddleware,
   async (req: Request, res: Response) => {
-    const id = +req.params.id;
+    const id = req.params.id;
     const currentDate = new Date();
 
     const videos = await videosService.findVideos();
@@ -132,12 +132,6 @@ videosRouter.put(
     } else if (isVideoUpdated) {
       const video = await videosService.getVideoById(id);
       if (video) {
-        // video.title = title;
-        // video.author = author;
-        // video.availableResolutions = availableResolutions;
-        // video.canBeDownloaded = canBeDownloaded;
-        // video.minAgeRestriction = minAgeRestriction;
-        // video.publicationDate = publicationDate;
         videosService.updateVideo;
         res.status(204).send(video);
       }

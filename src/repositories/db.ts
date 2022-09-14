@@ -1,8 +1,8 @@
 import { MongoClient } from "mongodb";
-import { BloggerType } from "./bloggers-repository";
-import { PostType } from "./posts-repository";
+import { BloggerType } from "./bloggers-db-repository";
+import { PostType } from "./posts-db-repository";
 import { ProductType } from "./products-db-repository";
-import { VideosType } from "./videos-repository";
+import { VideosType } from "./videos-db-repository";
 
 const mongoUri =
   process.env.mongoURI ||

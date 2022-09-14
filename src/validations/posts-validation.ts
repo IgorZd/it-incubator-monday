@@ -1,5 +1,4 @@
 import { body } from "express-validator";
-import { bloggersRepository } from "../repositories/bloggers-repository";
 
 export const titleValidation = body("title")
   .trim()
@@ -19,12 +18,5 @@ export const contentValidation = body("content")
 
 export const bloggerIdValidation = body("bloggerId")
   .trim()
-  .isInt()
-  .withMessage("BloggerId should be Integer")
-  .custom(async (value: string) => {
-    const blogger = bloggersRepository.getBloggerById(`${value}`);
-    if (!blogger) {
-      throw new Error("BloggerId doesn't exist");
-    }
-    return true;
-  });
+  .isLength({ min: 2 })
+  .withMessage("BloggerId is required");

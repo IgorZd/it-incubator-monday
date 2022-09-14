@@ -1,3 +1,5 @@
+import { postsCollection } from "./db";
+
 export type PostType = {
   id: string;
   title: string;
@@ -48,18 +50,20 @@ let posts = [
 ];
 
 export const postsRepository = {
-  findPosts() {
-    return posts;
+  async findPosts() {
+    const result = await postsCollection.find({}).toArray();
+    return result;
   },
-  getPostById(id: string) {
-    const post = posts.find((item: PostType) => item.id === id);
+  async getPostById(id: string) {
+    const post: PostType | null = await postsCollection.findOne({ id: id });
     return post;
   },
-  createPosts(newPost: PostType) {
-    posts.push(newPost);
+  async createPosts(newPost: PostType) {
+    const result = await postsCollection.insertOne(newPost);
+
     return newPost;
   },
-  updatePost(
+  async updatePost(
     id: string,
     data: {
       title: string;
@@ -71,32 +75,26 @@ export const postsRepository = {
   ) {
     const { title, shortDescription, content, bloggerId, bloggerName } = data;
 
-    const post = posts.find((item: PostType) => item.id === id);
+    const post = await postsCollection.updateOne(
+      { id: id },
+      { $set: { title, shortDescription, content, bloggerId, bloggerName } }
+    );
     if (post) {
-      post.title = title;
-      post.shortDescription = shortDescription;
-      post.content = content;
-      post.bloggerId = bloggerId;
-      post.bloggerName = bloggerName;
-      return post;
-    } else {
-      false;
-    }
-  },
-  deletePost(id: string) {
-    for (let i = 0; i < posts.length; i++) {
-      if (posts[i].id === id) {
-        posts.splice(i, 1);
-        return true;
-      }
-    }
-
-    return false;
-  },
-  removeAllData() {
-    posts = [];
-    if (posts.length === 0) {
       return true;
-    } else false;
+    } else {
+      return false;
+    }
+  },
+  async deletePost(id: string) {
+    const result = await postsCollection.deleteOne({ id: id });
+
+    return result.deletedCount === 1;
+  },
+  async removeAllData() {
+    const postsArr = await postsRepository.findPosts();
+    const comapringArrLength = [...postsArr].length;
+    const result = await postsCollection.deleteMany({});
+
+    return result.deletedCount === comapringArrLength;
   },
 };

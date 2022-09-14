@@ -1,7 +1,7 @@
 import { videosCollection } from "./db";
 
 export type VideosType = {
-  id: number;
+  id: string;
   title: string;
   author: string;
   canBeDownloaded: boolean;
@@ -29,7 +29,7 @@ export const isResolutionValid = (checkArr: string[]) =>
     )
     .filter((item: string | undefined) => item === undefined).length === 0;
 
-export const isIdExist = (id: number | string, arrayForChecking: any[]) => {
+export const isIdExist = (id: string | string, arrayForChecking: any[]) => {
   const index = arrayForChecking.findIndex((item: any) => item.id === id);
   return index > -1;
 };
@@ -38,7 +38,7 @@ export const videosRepository = {
   async findVideos() {
     return videosCollection.find({}).toArray();
   },
-  async getVideoById(id: number) {
+  async getVideoById(id: string) {
     let video: VideosType | null = await videosCollection.findOne({ id: id });
     return video;
   },
@@ -48,7 +48,7 @@ export const videosRepository = {
     return newVideo;
   },
   async updateVideo(
-    id: number,
+    id: string,
     data: {
       title: string;
       author: string;
@@ -86,7 +86,7 @@ export const videosRepository = {
       return false;
     }
   },
-  async deleteVideo(id: number) {
+  async deleteVideo(id: string) {
     const result = await videosCollection.deleteOne({ id: id });
 
     return result.deletedCount === 1;

@@ -1,14 +1,14 @@
-import { postsRepository } from "../repositories/posts-repository";
+import { postsRepository } from "../repositories/posts-db-repository";
 import { getRequiredDateFormat } from "../utills/date-format";
 
 export const postsService = {
-  findPosts() {
+  async findPosts() {
     return postsRepository.findPosts();
   },
-  getPostById(id: string) {
+  async getPostById(id: string) {
     return postsRepository.getPostById(id);
   },
-  createPosts(data: {
+  async createPosts(data: {
     title: string;
     shortDescription: string;
     content: string;
@@ -32,7 +32,7 @@ export const postsService = {
 
     return createdPost;
   },
-  updatePost(
+  async updatePost(
     id: string,
     data: {
       title: string;
@@ -44,10 +44,10 @@ export const postsService = {
   ) {
     return postsRepository.updatePost(id, data);
   },
-  deletePost(id: string) {
+  async deletePost(id: string) {
     return postsRepository.deletePost(id);
   },
-  removeAllData() {
+  async removeAllData() {
     return postsRepository.removeAllData();
   },
 };

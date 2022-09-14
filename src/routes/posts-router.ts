@@ -3,7 +3,7 @@ import { postsService } from "../domain/posts-service";
 import { authMiddleware } from "../middlewares/auth-middleware";
 import { inputValidationMiddleware } from "../middlewares/input-validation-middleware";
 import { isPostIdExistMiddleware } from "../middlewares/isIdExist-middleware";
-import { bloggersRepository } from "../repositories/bloggers-repository";
+import { bloggersRepository } from "../repositories/bloggers-db-repository";
 
 import {
   bloggerIdValidation,
@@ -21,8 +21,8 @@ const validations = [
   contentValidation,
 ];
 
-postsRouter.get("/", (req: Request, res: Response) => {
-  const videos = postsService.findPosts();
+postsRouter.get("/", async (req: Request, res: Response) => {
+  const videos = await postsService.findPosts();
   res.status(200).send(videos);
 });
 
@@ -31,8 +31,8 @@ postsRouter.post(
   authMiddleware,
   ...validations,
   inputValidationMiddleware,
-  (req: Request, res: Response) => {
-    const blogger = bloggersRepository.getBloggerById(req.body.bloggerId);
+  async (req: Request, res: Response) => {
+    const blogger = await bloggersRepository.getBloggerById(req.body.bloggerId);
 
     if (blogger) {
       const data = {
@@ -42,7 +42,7 @@ postsRouter.post(
         bloggerId: req.body.bloggerId,
         bloggerName: blogger.name,
       };
-      const newPost = postsService.createPosts(data);
+      const newPost = await postsService.createPosts(data);
       res.status(201).send(newPost);
     }
   }
@@ -52,9 +52,9 @@ postsRouter.get(
   "/:postId",
   isPostIdExistMiddleware,
   inputValidationMiddleware,
-  (req: Request, res: Response) => {
+  async (req: Request, res: Response) => {
     const id = req.params.postId;
-    const post = postsService.getPostById(id);
+    const post = await postsService.getPostById(id);
 
     if (post) {
       res.status(200).send(post);
@@ -70,13 +70,13 @@ postsRouter.put(
   isPostIdExistMiddleware,
   ...validations,
   inputValidationMiddleware,
-  (req: Request, res: Response) => {
+  async (req: Request, res: Response) => {
     const id = req.params.postId;
     const title: string = req.body.title;
     const shortDescription: string = req.body.shortDescription;
     const content: string = req.body.content;
     const bloggerId = req.body.bloggerId;
-    const blogger = bloggersRepository.getBloggerById(req.body.bloggerId);
+    const blogger = await bloggersRepository.getBloggerById(req.body.bloggerId);
 
     if (blogger) {
       const data = {
@@ -86,7 +86,7 @@ postsRouter.put(
         bloggerId,
         bloggerName: blogger.name,
       };
-      const post = postsService.updatePost(id, data);
+      const post = await postsService.updatePost(id, data);
 
       if (post) {
         res.status(204).send(post);
@@ -103,9 +103,9 @@ postsRouter.delete(
   "/:postId",
   authMiddleware,
   isPostIdExistMiddleware,
-  (req: Request, res: Response) => {
+  async (req: Request, res: Response) => {
     const id = req.params.postId;
-    const isPostDeleted = postsService.deletePost(id);
+    const isPostDeleted = await postsService.deletePost(id);
 
     if (!isPostDeleted) {
       res.sendStatus(404);

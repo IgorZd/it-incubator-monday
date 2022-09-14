@@ -1,8 +1,9 @@
 import { NextFunction, Request, Response } from "express";
-import { bloggersRepository } from "../repositories/bloggers-repository";
-import { postsRepository } from "../repositories/posts-repository";
+import { bloggersRepository } from "../repositories/bloggers-db-repository";
 
-export const isBloggerIdExistMiddleware = (
+import { postsRepository } from "../repositories/posts-db-repository";
+
+export const isBloggerIdExistMiddleware = async (
   req: Request,
   res: Response,
   next: NextFunction
@@ -12,14 +13,14 @@ export const isBloggerIdExistMiddleware = (
     res.sendStatus(404);
     return;
   }
-  const blogger = bloggersRepository.getBloggerById(id);
+  const blogger = await bloggersRepository.getBloggerById(id);
 
   if (!blogger) {
     res.sendStatus(404);
   } else next();
 };
 
-export const isPostIdExistMiddleware = (
+export const isPostIdExistMiddleware = async (
   req: Request,
   res: Response,
   next: NextFunction
@@ -29,7 +30,7 @@ export const isPostIdExistMiddleware = (
     res.sendStatus(404);
     return;
   }
-  const post = postsRepository.getPostById(id);
+  const post = await postsRepository.getPostById(id);
 
   if (!post) {
     res.sendStatus(404);

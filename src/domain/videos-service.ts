@@ -5,7 +5,7 @@ export const videosService = {
   async findVideos() {
     return videosRepository.findVideos();
   },
-  async getVideoById(id: number) {
+  async getVideoById(id: string) {
     return videosRepository.getVideoById(id);
   },
   async createVideo(
@@ -16,7 +16,7 @@ export const videosService = {
   ) {
     const today = new Date();
     const newVideo = {
-      id: +new Date(),
+      id: `${+new Date()}`,
       title,
       author,
       canBeDownloaded: false,
@@ -34,7 +34,7 @@ export const videosService = {
     return createdVideo;
   },
   async updateVideo(
-    id: number,
+    id: string,
     data: {
       title: string;
       author: string;
@@ -47,7 +47,7 @@ export const videosService = {
   ) {
     return videosRepository.updateVideo(id, data);
   },
-  async deleteVideo(id: number) {
+  async deleteVideo(id: string) {
     return videosRepository.deleteVideo(id);
   },
   async removeAllData() {
